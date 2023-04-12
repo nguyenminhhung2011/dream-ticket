@@ -1,4 +1,4 @@
-package model;
+package com.ticket.server.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,5 +20,4 @@ public class Flight {
     private Date departureDate;
     private Date arrivalDate;
     private Boolean isStop;
-    private List<Stopover> stop;
 }

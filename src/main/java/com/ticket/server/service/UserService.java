@@ -1,9 +1,9 @@
-package service;
+package com.ticket.server.service;
 
-import model.User;
+import com.ticket.server.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.UserRepository;
+import com.ticket.server.repository.UserRepository;
 
 @Service
 public class UserService {

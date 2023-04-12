@@ -1,13 +1,9 @@
-package controller;
+package com.ticket.server.controller;
 
-import lombok.RequiredArgsConstructor;
-import model.User;
-import org.springframework.http.ResponseEntity;
+import com.ticket.server.model.User;
 import org.springframework.web.bind.annotation.*;
-import service.UserService;
+import com.ticket.server.service.UserService;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -31,4 +27,9 @@ public class UserController {
         return null;
     }
 
+    @GetMapping("/hello")
+    public Void hello(){
+        System.out.println("Hello");
+        return null;
+    }
 }

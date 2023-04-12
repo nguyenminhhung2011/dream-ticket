@@ -1,6 +1,6 @@
-package repository;
+package com.ticket.server.repository;
 
-import model.User;
+import com.ticket.server.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
