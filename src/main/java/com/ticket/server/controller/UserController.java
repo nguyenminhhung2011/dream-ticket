@@ -1,8 +1,10 @@
 package com.ticket.server.controller;
 
 import com.ticket.server.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ticket.server.service.UserService;
+
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    @Autowired
     private UserService userService;
 
     @PostMapping("/register")
@@ -19,17 +22,13 @@ public class UserController {
 
     @GetMapping("/")
     public List<User> getAllUsers(){
-        return null;
+        return userService.getAllUsers();
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long id) {
         return null;
     }
 
-    @GetMapping("/hello")
-    public Void hello(){
-        System.out.println("Hello");
-        return null;
-    }
+
 }

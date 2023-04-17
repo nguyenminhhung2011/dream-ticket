@@ -1,20 +1,21 @@
 package com.ticket.server.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Data
+@Table(name = "User")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String accountName;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String password;
 
     @Column(length = 10)
