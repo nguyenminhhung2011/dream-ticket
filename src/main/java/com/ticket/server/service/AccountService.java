@@ -26,6 +26,10 @@ public class AccountService {
         return ResponseEntity.created(URI.create("/account/" + createdAccount.getId())).body(createdAccount);
     }
 
+    public ResponseEntity<Account> loginAccount(Account account){
+        return null;
+    }
+
     public ResponseEntity<Void> deleteAccount(Long id){
         Optional<Account> optionalAccount = accountRepository.findById(id);
         if(!optionalAccount.isPresent()){

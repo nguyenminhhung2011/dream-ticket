@@ -20,6 +20,11 @@ public class AccountController {
         return accountService.addAccount(account);
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<Account> loginAccount(@RequestBody Account account){
+        return accountService.loginAccount(account);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id){
         return accountService.deleteAccount(id);
