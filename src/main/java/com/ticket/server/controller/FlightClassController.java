@@ -38,4 +38,9 @@ public class FlightClassController {
     public ResponseEntity<FlightClass> updateFlightClass(@PathVariable Long id, @RequestBody FlightClass flightClass){
         return flightClassService.updateFlightClass(id, flightClass);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<FlightClass> deleteFligtClass(@PathVariable Long id){
+        return flightClassService.deleteFlightClass(id);
+    }
 }

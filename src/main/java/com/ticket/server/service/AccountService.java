@@ -1,6 +1,5 @@
 package com.ticket.server.service;
 
-import com.ticket.server.controller.AccountController;
 import com.ticket.server.model.Account;
 import com.ticket.server.model.UserInformation;
 import com.ticket.server.repository.AccountRepository;
@@ -16,23 +15,24 @@ import java.util.Optional;
 @Service
 public class AccountService {
     @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    private UserInformationRepository userInformationRepository;
+    private final UserInformationRepository userInformationRepository;
+
+    public AccountService(AccountRepository accountRepository, UserInformationRepository userInformationRepository) {
+        this.accountRepository = accountRepository;
+        this.userInformationRepository = userInformationRepository;
+    }
 
     public ResponseEntity<Account> addAccount(Account account){
         Account createdAccount = accountRepository.save(account);
         return ResponseEntity.created(URI.create("/account/" + createdAccount.getId())).body(createdAccount);
     }
 
-    public ResponseEntity<Account> loginAccount(Account account){
-        return null;
-    }
-
     public ResponseEntity<Void> deleteAccount(Long id){
         Optional<Account> optionalAccount = accountRepository.findById(id);
-        if(!optionalAccount.isPresent()){
+        if(optionalAccount.isEmpty()){
             return ResponseEntity.notFound().build();
         }
 
@@ -55,7 +55,7 @@ public class AccountService {
 
     public ResponseEntity<Account> updateAccount(Long id, Account account){
         Optional<Account> optionalAccount = accountRepository.findById(id);
-        if(!optionalAccount.isPresent()){
+        if(optionalAccount.isEmpty()){
             return ResponseEntity.notFound().build();
         }
 
