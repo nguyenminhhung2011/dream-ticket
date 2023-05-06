@@ -4,11 +4,13 @@ import com.ticket.server.model.Airport;
 import com.ticket.server.repository.AirportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AirportService {
 
     @Autowired
@@ -26,6 +28,7 @@ public class AirportService {
 
     public ResponseEntity<Airport> getAirport(Long id){
         Optional<Airport> optionalAirport = airportRepository.findById(id);
+
         return optionalAirport.map(airport -> ResponseEntity.ok().body(airport))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

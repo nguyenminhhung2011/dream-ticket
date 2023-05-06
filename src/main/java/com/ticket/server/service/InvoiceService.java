@@ -4,12 +4,14 @@ import com.ticket.server.model.Invoice;
 import com.ticket.server.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class InvoiceService {
     @Autowired
     private final InvoiceRepository invoiceRepository;
