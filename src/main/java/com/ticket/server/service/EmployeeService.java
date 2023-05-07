@@ -1,9 +1,11 @@
 package com.ticket.server.service;
 
+import com.ticket.server.data.UserCredentials;
 import com.ticket.server.model.Employee;
 import com.ticket.server.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -16,13 +18,34 @@ public class EmployeeService {
     @Autowired
     private final EmployeeRepository employeeRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
     public ResponseEntity<Employee> addEmployee(Employee employee){
+        // Hash the password before saving it to the database
+        String hashedPassword = passwordEncoder.encode(employee.getPassword());
+        employee.setPassword(hashedPassword);
+
         Employee createdEmployee = employeeRepository.save(employee);
         return ResponseEntity.created(URI.create("/employee/" + createdEmployee.getId())).body(createdEmployee);
+    }
+
+    public ResponseEntity<Employee> login(UserCredentials credentials) {
+        Optional<Employee> optionalEmployee = employeeRepository.findByAccount(credentials.getAccountName());
+        if(optionalEmployee.isPresent()){
+            Employee employee = optionalEmployee.get();
+
+            // Check if the provided password matches the hashed password stored in the database
+            if(passwordEncoder.matches(credentials.getPassword(), employee.getPassword())) {
+                return ResponseEntity.ok().body(employee);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<Employee> getEmployee(Long id){

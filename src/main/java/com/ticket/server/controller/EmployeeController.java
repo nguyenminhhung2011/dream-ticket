@@ -1,5 +1,7 @@
 package com.ticket.server.controller;
 
+import com.ticket.server.data.UserCredentials;
+import com.ticket.server.model.Account;
 import com.ticket.server.model.Employee;
 import com.ticket.server.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,11 @@ public class EmployeeController {
     @PostMapping("/add")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee){
         return employeeService.addEmployee(employee);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Employee> login(@RequestBody UserCredentials credentials){
+        return employeeService.login(credentials);
     }
 
     @GetMapping("/{id}")
