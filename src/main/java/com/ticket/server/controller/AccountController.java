@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/v1/account")
 public class AccountController {
     @Autowired
     private AccountService accountService;
@@ -41,12 +41,25 @@ public class AccountController {
     }
 
     @GetMapping("/")
-    public List<Account> getAllAccount(){
-        return accountService.getAllAccount();
+    public ResponseEntity<List<Account>> getAllAccount(){
+        List<Account> accounts = accountService.getAllAccount();
+        return ResponseEntity.ok(accounts);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account){
         return accountService.updateAccount(id, account);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Account>> searchAccounts(@RequestParam("keyword") String keyword){
+        List<Account> accounts = accountService.searchAccounts(keyword);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<Account>> sortAccounts(@RequestParam(value = "sortBy", defaultValue = "id") String sortBy){
+        List<Account> accounts = accountService.sortAccounts(sortBy);
+        return ResponseEntity.ok(accounts);
     }
 }

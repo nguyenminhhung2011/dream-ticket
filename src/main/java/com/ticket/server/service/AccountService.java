@@ -6,6 +6,7 @@ import com.ticket.server.model.UserInformation;
 import com.ticket.server.repository.AccountRepository;
 import com.ticket.server.repository.UserInformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -97,5 +98,20 @@ public class AccountService {
         account.getUserInformation().setId(id);
         Account updatedAccount = accountRepository.save(account);
         return ResponseEntity.ok().body(updatedAccount);
+    }
+
+    public List<Account> searchAccounts(String keyword) {
+        return accountRepository.findByAccountNameContainingIgnoreCase(keyword);
+    }
+
+    public List<Account> sortAccounts(String sortBy){
+        switch (sortBy){
+            case "id":
+                return accountRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+            case "accountName":
+                return accountRepository.findAll(Sort.by(Sort.Direction.ASC, "accountName"));
+            default:
+                return accountRepository.findAll();
+        }
     }
 }

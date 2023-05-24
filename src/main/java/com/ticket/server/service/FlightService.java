@@ -5,6 +5,9 @@ import com.ticket.server.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.List;
@@ -61,5 +64,18 @@ public class FlightService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public ResponseEntity<List<Flight>> searchFlights(String departureKeyword, String arrivalKeyword, String arrivalTimeKeyword) {
+        List<Flight> flights = flightRepository.findByDepartureAirportNameContainingOrArrivalAirportNameContainingAndArrivalTimeContaining(departureKeyword, arrivalKeyword, arrivalTimeKeyword);
+        return ResponseEntity.ok().body(flights);
+    }
+
+    public ResponseEntity<List<Flight>> getFlightsSortedBy(String sortBy, boolean ascending) {
+        Sort.Direction direction = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+        List<Flight> flights = flightRepository.findAll(pageable).getContent();
+        return ResponseEntity.ok().body(flights);
     }
 }

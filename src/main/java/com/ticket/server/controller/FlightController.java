@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/flight")
+@RequestMapping("/api/v1/flight")
 @RestController
 public class FlightController {
     @Autowired
@@ -41,5 +41,20 @@ public class FlightController {
     @PutMapping("/{id}")
     public ResponseEntity<Flight> updateFlight(@PathVariable Long id, @RequestBody Flight flight){
         return flightService.updateFlight(id, flight);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Flight>> searchFlights(
+            @RequestParam(name = "departureKeyword") String departureKeyword,
+            @RequestParam(name = "arrivalKeyword") String arrivalKeyword,
+            @RequestParam(name = "arrivalTimeKeyword") String arrivalTimeKeyword) {
+        return flightService.searchFlights(departureKeyword, arrivalKeyword, arrivalTimeKeyword);
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<Flight>> getFlightsSortedBy(
+            @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "ascending", defaultValue = "true") boolean ascending) {
+        return flightService.getFlightsSortedBy(sortBy, ascending);
     }
 }
