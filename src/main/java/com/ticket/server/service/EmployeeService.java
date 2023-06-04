@@ -2,11 +2,16 @@ package com.ticket.server.service;
 
 import com.ticket.server.data.UserCredentials;
 import com.ticket.server.model.Employee;
+import com.ticket.server.model.Flight;
 import com.ticket.server.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URI;
 import java.util.List;
@@ -84,5 +89,18 @@ public class EmployeeService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public ResponseEntity<List<Employee>> searchEmployees(String fullName, String account){
+        List<Employee> employees = employeeRepository.findByFullNameOrAccountIgnoreCase(fullName, account);
+        return ResponseEntity.ok().body(employees);
+    }
+
+    public ResponseEntity<List<Employee>> getEmployeesSortedBy(String sortBy, boolean ascending){
+        Sort.Direction direction = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+        List<Employee> employees = employeeRepository.findAll(pageable).getContent();
+        return ResponseEntity.ok().body(employees);
     }
 }

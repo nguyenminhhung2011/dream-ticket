@@ -67,7 +67,7 @@ public class FlightService {
     }
 
     public ResponseEntity<List<Flight>> searchFlights(String departureKeyword, String arrivalKeyword, String arrivalTimeKeyword) {
-        List<Flight> flights = flightRepository.findByDepartureAirportNameContainingOrArrivalAirportNameContainingAndArrivalTimeContaining(departureKeyword, arrivalKeyword, arrivalTimeKeyword);
+        List<Flight> flights = flightRepository.findByDepartureAirportContainingOrArrivalAirportContainingAndArrivalTimeContaining(departureKeyword, arrivalKeyword, arrivalTimeKeyword);
         return ResponseEntity.ok().body(flights);
     }
 

@@ -1,7 +1,6 @@
 package com.ticket.server.controller;
 
 import com.ticket.server.data.UserCredentials;
-import com.ticket.server.model.Account;
 import com.ticket.server.model.Employee;
 import com.ticket.server.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +47,19 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
         return employeeService.updateEmployee(id, employee);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Employee>> searchEmployees(
+            @RequestParam(name = "fullName") String fullName,
+            @RequestParam(name = "account") String account){
+        return employeeService.searchEmployees(fullName, account);
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<Employee>> getEmployeesSortedBy(
+            @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "ascending", defaultValue = "true") boolean ascending) {
+        return employeeService.getEmployeesSortedBy(sortBy, ascending);
     }
 }
