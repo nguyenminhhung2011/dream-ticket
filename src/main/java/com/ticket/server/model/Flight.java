@@ -33,5 +33,8 @@ public class Flight {
     private LocalDateTime arrivalTime;
 
     @OneToMany(mappedBy = "flight")
+    private List<FlightClassSeats> flightClassSeatsList;
+
+    @OneToMany(mappedBy = "flight")
     private List<StopAirport> stops;
 }

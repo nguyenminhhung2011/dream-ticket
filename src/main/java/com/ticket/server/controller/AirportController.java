@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/airport")
+import java.util.List;
+
+@RequestMapping("/api/v1/airport")
 @RestController
 public class AirportController {
     @Autowired
@@ -21,4 +23,20 @@ public class AirportController {
     public ResponseEntity<Airport> getAirport(@PathVariable Long id){
         return airportService.getAirport(id);
     }
+
+    @GetMapping("/")
+    public List<Airport> getAllAirport() {
+        return airportService.getAllAirport();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Airport> deleteAirport(@PathVariable Long id){
+        return airportService.deleteAirport(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Airport> updateAirport(@PathVariable Long id, @RequestBody Airport airport){
+        return airportService.updateAirport(id, airport);
+    }
+
 }

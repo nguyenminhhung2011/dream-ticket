@@ -1,5 +1,6 @@
 package com.ticket.server.controller;
 
+import com.ticket.server.data.UserCredentials;
 import com.ticket.server.model.Account;
 import com.ticket.server.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/v1/account")
 public class AccountController {
     @Autowired
     private AccountService accountService;
@@ -20,9 +20,9 @@ public class AccountController {
         return accountService.addAccount(account);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<Account> loginAccount(@RequestBody Account account){
-        return accountService.loginAccount(account);
+    @PostMapping("/login")
+    public ResponseEntity<Account> login(@RequestBody UserCredentials credentials){
+        return accountService.login(credentials);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -30,18 +30,36 @@ public class AccountController {
         return accountService.deleteAccount(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Account> getAccount(@PathVariable Long id){
         return accountService.getAccount(id);
     }
 
-    @GetMapping("/")
-    public List<Account> getAllAccount(){
-        return accountService.getAllAccount();
+    @GetMapping("/username/{accountName}")
+    public ResponseEntity<Account> getAccountByAccountName(@PathVariable String accountName){
+        return accountService.getAccountByAccountName(accountName);
     }
 
-    @PutMapping("/update/{id}")
+    @GetMapping("/")
+    public ResponseEntity<List<Account>> getAllAccount(){
+        List<Account> accounts = accountService.getAllAccount();
+        return ResponseEntity.ok(accounts);
+    }
+
+    @PutMapping("/{id}")
     public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account){
         return accountService.updateAccount(id, account);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Account>> searchAccounts(@RequestParam("keyword") String keyword){
+        List<Account> accounts = accountService.searchAccounts(keyword);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<Account>> sortAccounts(@RequestParam(value = "sortBy", defaultValue = "id") String sortBy){
+        List<Account> accounts = accountService.sortAccounts(sortBy);
+        return ResponseEntity.ok(accounts);
     }
 }
