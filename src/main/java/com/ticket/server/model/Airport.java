@@ -16,4 +16,6 @@ public class Airport {
 
     @Column(nullable = false)
     private String location;
+    @Column
+    private  String imageUrl;
 }

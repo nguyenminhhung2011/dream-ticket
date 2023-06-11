@@ -47,8 +47,8 @@ public class AirportService {
         }
     }
 
-    public ResponseEntity<Airport> updateAirport(Long id, Airport airport) {
-        Optional<Airport> airportData = airportRepository.findById(id);
+    public ResponseEntity<Airport> updateAirport( Airport airport) {
+        Optional<Airport> airportData = airportRepository.findById(airport.getId());
 
         if (airportData.isPresent()) {
             Airport updatedAirport = airportData.get();
@@ -60,4 +60,5 @@ public class AirportService {
             return ResponseEntity.notFound().build();
         }
     }
+
 }

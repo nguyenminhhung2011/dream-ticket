@@ -29,14 +29,14 @@ public class AirportController {
         return airportService.getAllAirport();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Airport> deleteAirport(@PathVariable Long id){
         return airportService.deleteAirport(id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Airport> updateAirport(@PathVariable Long id, @RequestBody Airport airport){
-        return airportService.updateAirport(id, airport);
+    @PutMapping("/update")
+    public ResponseEntity<Airport> updateAirport(@RequestBody Airport airport){
+        return airportService.updateAirport(airport);
     }
 
 }

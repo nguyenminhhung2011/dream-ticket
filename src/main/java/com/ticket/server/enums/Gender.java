@@ -8,6 +8,10 @@ public enum Gender {
     public final boolean gender;
 
     Gender(boolean value){
+
         gender = value;
+    }
+    public boolean isMale() {
+        return this == MALE;
     }
 }
