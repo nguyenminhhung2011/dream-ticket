@@ -3,9 +3,12 @@ package com.ticket.server.service;
 import com.ticket.server.model.Airport;
 import com.ticket.server.repository.AirportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +23,12 @@ public class AirportService {
         this.airportRepository = airportRepository;
     }
 
+
+    public List<Airport> getAirportByPage(int cursor, int pageSize) {
+        PageRequest pageable = PageRequest.of(cursor, pageSize);
+        Page<Airport> page = airportRepository.findAll(pageable);
+        return page.getContent();
+    }
 
     public ResponseEntity<Airport> addAirport(Airport airport){
         Airport createdAirport = airportRepository.save(airport);

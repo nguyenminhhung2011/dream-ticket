@@ -23,6 +23,10 @@ public class AirportController {
     public ResponseEntity<Airport> getAirport(@PathVariable Long id){
         return airportService.getAirport(id);
     }
+    @GetMapping("/page/{cursor}/{pageSize}")
+    public List<Airport> getAirportByPage(@PathVariable int cursor, @PathVariable int pageSize){
+        return airportService.getAirportByPage(cursor, pageSize);
+    }
 
     @GetMapping("/")
     public List<Airport> getAllAirport() {
