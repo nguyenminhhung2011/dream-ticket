@@ -5,16 +5,18 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "ticket")
-public class Ticket {
+@Table(name = "flight_class_Seat")
+public class FlightClassSeats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
-    private String identityCard;
-    private String phone;
-
     @ManyToOne
     private Flight flight;
+
+    @ManyToOne
+    private FlightClass flightClass;
+
+    private Integer numberOfSeats;
+    private Double price;
 }

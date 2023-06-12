@@ -1,11 +1,8 @@
 package com.ticket.server.model;
 
+import com.ticket.server.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.util.Date;
 
 @Data
 @Entity
@@ -20,6 +17,5 @@ public class UserInformation {
     private String phone;
     private String email;
     private String address;
-    //True is male, False is female
-    private Boolean gender;
+    private Gender gender;
 }
