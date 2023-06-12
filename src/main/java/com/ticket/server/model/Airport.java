@@ -16,7 +16,7 @@ public class Airport {
 
     @Column(nullable = false)
     private String airportName;
-
+    
     @Column(nullable = false)
     private String location;
     @Column
@@ -25,10 +25,10 @@ public class Airport {
     private  String description;
 
     @Column
-    private LocalDateTime openTime;
+    private Long openTime;
 
     @Column
-    private LocalDateTime closeTime;
+    private Long closeTime;
 
     @OneToMany(mappedBy = "airport")
     private List<AirportImage> images;

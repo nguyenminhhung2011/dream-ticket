@@ -49,16 +49,18 @@ public class AirportService {
 
     public ResponseEntity<Airport> updateAirport( Airport airport) {
         Optional<Airport> airportData = airportRepository.findById(airport.getId());
-
         if (airportData.isPresent()) {
             Airport updatedAirport = airportData.get();
             updatedAirport.setAirportName(airport.getAirportName());
             updatedAirport.setLocation(airport.getLocation());
+            updatedAirport.setDescription(airport.getDescription());
+            updatedAirport.setCloseTime(airport.getCloseTime());
+            updatedAirport.setOpenTime(airport.getOpenTime());
+            updatedAirport.setImageUrl(airport.getImageUrl());
             airportRepository.save(updatedAirport);
             return ResponseEntity.ok().body(updatedAirport);
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
 }
