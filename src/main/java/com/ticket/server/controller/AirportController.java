@@ -1,22 +1,43 @@
 package com.ticket.server.controller;
 
-import com.ticket.server.model.Airport;
-import com.ticket.server.service.AirportService;
+import com.ticket.server.dtos.AirportDtos.AddAirportDto;
+import com.ticket.server.dtos.AirportDtos.AirportDto;
+import com.ticket.server.entities.Airport;
+import com.ticket.server.service.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-@RequestMapping("/api/v1/airport")
+@RequestMapping(value = "/api/v1/airport", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class AirportController {
-    @Autowired
-    private AirportService airportService;
+    private final IAirportService airportService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Airport> addAirport(@RequestBody Airport airport){
-        return airportService.addAirport(airport);
+    AirportController(@Autowired IAirportService airportService){
+        this.airportService = airportService;
+    }
+
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity<Airport> addAirport(@RequestBody Airport airport){
+//        return airportService.addAirport(airport);
+//    }
+    public @ResponseBody AirportDto addAirport(@RequestBody AddAirportDto addAirportDto){
+        Airport airport = new Airport(addAirportDto.getAirportName(),
+                addAirportDto.getLocation(),
+                addAirportDto.getImageUrl(),
+                addAirportDto.getDescription(),
+                addAirportDto.getOpenTime(),
+                addAirportDto.getCloseTime()
+        );
+        return new AirportDto(airportService.addAirport(airport));
     }
 
     @GetMapping("/{id}")
@@ -29,8 +50,10 @@ public class AirportController {
     }
 
     @GetMapping("/")
-    public List<Airport> getAllAirport() {
-        return airportService.getAllAirport();
+    public @ResponseBody List<AirportDto> getAllAirport() {
+        return airportService.getAllAirport().stream()
+                .map(AirportDto::new)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/delete/{id}")
@@ -41,6 +64,10 @@ public class AirportController {
     @PutMapping("/update")
     public ResponseEntity<Airport> updateAirport(@RequestBody Airport airport){
         return airportService.updateAirport(airport);
+    }
+
+    private ResponseStatusException throwNotFoundException(){
+        return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
 }
