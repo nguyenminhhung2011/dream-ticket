@@ -34,11 +34,8 @@ public class AirportServicesImpl implements IAirportService {
     }
 
     @Override
-    public ResponseEntity<Airport> getAirport(Long id) {
-        Optional<Airport> optionalAirport = airportRepository.findById(id);
-
-        return optionalAirport.map(airport -> ResponseEntity.ok().body(airport))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public Optional<Airport> getAirport(Long id) {
+        return airportRepository.findById(id);
     }
 
     @Override
@@ -47,30 +44,33 @@ public class AirportServicesImpl implements IAirportService {
     }
 
     @Override
-    public ResponseEntity<Airport> deleteAirport(Long id) {
+    public void deleteAirport(Long id) {
         try {
             airportRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
         }
         catch (Exception e){
-            return ResponseEntity.notFound().build();
+            // do nothing
         }
     }
 
     @Override
-    public ResponseEntity<Airport> updateAirport(Airport airport) {
-        Optional<Airport> airportData = airportRepository.findById(airport.getId());
-        if (airportData.isPresent()) {
-            Airport updatedAirport = airportData.get();
-            updatedAirport.setAirportName(airport.getAirportName());
-            updatedAirport.setLocation(airport.getLocation());
-            updatedAirport.setDescription(airport.getDescription());
-            updatedAirport.setCloseTime(airport.getCloseTime());
-            updatedAirport.setOpenTime(airport.getOpenTime());
-            updatedAirport.setImageUrl(airport.getImageUrl());
-            airportRepository.save(updatedAirport);
-            return ResponseEntity.ok().body(updatedAirport);
+    public Optional<Airport> updateAirport(Airport airport, Long id) {
+        if(!airportRepository.existsById(id)){
+            return Optional.empty();
         }
-        return ResponseEntity.notFound().build();
+        airport.setId(id);
+        airport.setAirportName(airport.getAirportName());
+        airport.setLocation(airport.getLocation());
+        airport.setImageUrl(airport.getImageUrl());
+        airport.setDescription(airport.getDescription());
+        airport.setCloseTime(airport.getCloseTime());
+        airport.setOpenTime(airport.getOpenTime());
+
+        return Optional.of(airportRepository.save(airport));
+    }
+
+    @Override
+    public Airport saveAirport(Airport airport) {
+        return airportRepository.save(airport);
     }
 }

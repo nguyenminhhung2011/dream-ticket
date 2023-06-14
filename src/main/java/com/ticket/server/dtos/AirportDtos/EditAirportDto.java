@@ -47,23 +47,34 @@ public class EditAirportDto {
         return closeTime;
     }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public void setCloseTime(Long closeTime) {
         this.closeTime = closeTime;
     }
-
-    private Optional<Long> id;
+    private Optional<Long> id ;
     private String airportName;
     private String location;
+
     private String description;
+
+    private String imageUrl;
     private Long openTime;
     private Long closeTime;
 
-    public EditAirportDto(Long id, String airportName, String location, String description, Long openTime, Long closeTime) {
+    public EditAirportDto(Long id, String airportName, String location, String description,String imageUrl, Long openTime, Long closeTime) {
         this.id = Optional.of(id);
         this.airportName = airportName;
         this.location = location;
         this.description = description;
+        this.imageUrl = imageUrl;
         this.openTime = openTime;
         this.closeTime = closeTime;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

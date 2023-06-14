@@ -2,6 +2,7 @@ package com.ticket.server.controller;
 
 import com.ticket.server.dtos.AirportDtos.AddAirportDto;
 import com.ticket.server.dtos.AirportDtos.AirportDto;
+import com.ticket.server.dtos.AirportDtos.EditAirportDto;
 import com.ticket.server.entities.Airport;
 import com.ticket.server.service.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,9 +28,6 @@ public class AirportController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-//    public ResponseEntity<Airport> addAirport(@RequestBody Airport airport){
-//        return airportService.addAirport(airport);
-//    }
     public @ResponseBody AirportDto addAirport(@RequestBody AddAirportDto addAirportDto){
         Airport airport = new Airport(addAirportDto.getAirportName(),
                 addAirportDto.getLocation(),
@@ -40,13 +39,35 @@ public class AirportController {
         return new AirportDto(airportService.addAirport(airport));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Airport> getAirport(@PathVariable Long id){
-        return airportService.getAirport(id);
+    @PatchMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody AirportDto updateAirport(
+            @RequestBody EditAirportDto editAirportDto,
+            @PathVariable("id") Long  id){
+        Airport airport =  new Airport(editAirportDto.getAirportName(),
+                editAirportDto.getLocation(),
+                editAirportDto.getImageUrl(),
+                editAirportDto.getDescription(),
+                editAirportDto.getOpenTime(),
+                editAirportDto.getCloseTime()
+        );
+
+        return airportService.updateAirport(airport, id)
+                .map(AirportDto::new)
+                .orElseThrow(this::throwNotFoundException);
     }
-    @GetMapping("/page/{cursor}/{pageSize}")
-    public List<Airport> getAirportByPage(@PathVariable int cursor, @PathVariable int pageSize){
-        return airportService.getAirportByPage(cursor, pageSize);
+    @GetMapping(value = "/{id}")
+    public @ResponseBody AirportDto getAirport(@PathVariable("id") Long id){
+        return airportService.getAirport(id)
+                .map(AirportDto::new)
+                .orElseThrow(this::throwNotFoundException);
+    }
+
+    @GetMapping("/page/cursor={cursor}&pageSize={pageSize}")
+    public @ResponseBody List<AirportDto> getAirportByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
+        return airportService.getAirportByPage(cursor, pageSize).stream()
+                .map(AirportDto::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/")
@@ -57,13 +78,9 @@ public class AirportController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Airport> deleteAirport(@PathVariable Long id){
-        return airportService.deleteAirport(id);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<Airport> updateAirport(@RequestBody Airport airport){
-        return airportService.updateAirport(airport);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAirport(@PathVariable Long id){
+        airportService.deleteAirport(id);
     }
 
     private ResponseStatusException throwNotFoundException(){

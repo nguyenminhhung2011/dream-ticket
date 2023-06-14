@@ -115,4 +115,12 @@ public class Airport {
         this.openTime = openTime;
         this.closeTime = closeTime;
     }
+
+    public Airport(String airportName, String location, String description, Long openTime, Long closeTime) {
+        this.airportName = airportName;
+        this.location = location;
+        this.description = description;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+    }
 }
