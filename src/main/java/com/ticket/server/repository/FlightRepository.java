@@ -1,8 +1,7 @@
 package com.ticket.server.repository;
 
-import com.ticket.server.model.Flight;
+import com.ticket.server.entities.Flight;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
