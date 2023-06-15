@@ -13,6 +13,25 @@ public class Airport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, name ="airportName" )
+    private String airportName;
+    @Column(nullable = false)
+    private String location;
+    @Column
+    private  String imageUrl;
+
+    @Column
+    private  String description;
+
+    @Column
+    private Long openTime;
+
+    @Column
+    private Long closeTime;
+
+    @OneToMany(mappedBy = "airport")
+    private List<AirportImage> images;
+
     public Long getId() {
         return id;
     }
@@ -84,25 +103,6 @@ public class Airport {
     public void resetImage() {
         images.clear();
     }
-
-    @Column(nullable = false)
-    private String airportName;
-    @Column(nullable = false)
-    private String location;
-    @Column
-    private  String imageUrl;
-
-    @Column
-    private  String description;
-
-    @Column
-    private Long openTime;
-
-    @Column
-    private Long closeTime;
-
-    @OneToMany(mappedBy = "airport")
-    private List<AirportImage> images;
 
     public Airport() {
     }
