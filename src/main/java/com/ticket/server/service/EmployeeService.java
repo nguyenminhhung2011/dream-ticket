@@ -40,7 +40,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<Employee> login(UserCredentials credentials) {
-        Optional<Employee> optionalEmployee = employeeRepository.findByAccount(credentials.getAccountName());
+        Optional<Employee> optionalEmployee = employeeRepository.findByAccount(credentials.getUsername());
         if(optionalEmployee.isPresent()){
             Employee employee = optionalEmployee.get();
 
