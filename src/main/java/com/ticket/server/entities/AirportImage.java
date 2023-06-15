@@ -1,8 +1,6 @@
-package com.ticket.server.model;
-
+package com.ticket.server.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
 @Table(name = "airport_images")
