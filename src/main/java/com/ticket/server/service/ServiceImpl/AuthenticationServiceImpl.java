@@ -1,0 +1,94 @@
+package com.ticket.server.service.ServiceImpl;
+
+import com.ticket.server.config.JwtService;
+import com.ticket.server.model.*;
+import com.ticket.server.repository.ConfirmationTokenRepository;
+import com.ticket.server.repository.UserRepository;
+import com.ticket.server.service.EmailService;
+import com.ticket.server.service.IService.IAuthenticationService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+@AllArgsConstructor
+public class AuthenticationServiceImpl implements IAuthenticationService {
+
+    private final JwtService _jwtService;
+    private final UserRepository _userRepository;
+    private final PasswordEncoder _passwordEncoder;
+    private final ConfirmationTokenRepository _confirmationTokenRepository;
+    private final AuthenticationManager _authenticationManager;
+    private final EmailService _emailService;
+    @Override
+    public ResponseEntity<?> register(RegisterRequest request) {
+        User user = User.builder()
+                .email(request.getEmail())
+                .name(request.getName())
+                .address(request.getUsername())
+                .gender(request.getGender())
+                .identityCard(request.getIdentityCard())
+                .role(request.getRole())
+                .username(request.getUsername())
+                .password(_passwordEncoder.encode(request.getPassword())).build();
+
+        User savedUser = _userRepository.save(user);
+        final String jwtToken = _jwtService.generateToken(savedUser);
+
+        ConfirmationToken confirmationToken = ConfirmationToken.builder().token(jwtToken).createdAt(LocalDateTime.now()).user(user).build();
+        _confirmationTokenRepository.save(confirmationToken);
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(user.getEmail());
+        simpleMailMessage.setSubject("[Flight Booking] Verify your account now !!!");
+        simpleMailMessage.setText("To confirm your account, please click here\n" +
+                "http://localhost:8080/api/v1/auth/confirm_email?token="+confirmationToken.getToken());
+
+        _emailService.sendMail(simpleMailMessage);
+
+        return ResponseEntity.ok("Verify account link sent to your email");
+    }
+
+    @Override
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        _authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
+
+        Optional<User> user = _userRepository.findByUsername(request.getUsername());
+
+        if (user.isPresent()){
+            User _user = user.get();
+            String jwtToken = _jwtService.generateToken(_user);
+
+            return AuthenticationResponse.builder().message("Login Successfully").isSuccess(true).token(jwtToken).build();
+        }
+
+        return AuthenticationResponse.builder().message("Can not found user in the database").isSuccess(false).build();
+    }
+
+    @Override
+    public ResponseEntity<?> confirmEmail(String confirmationToken) {
+        Optional<ConfirmationToken> optionalConfirmationToken = _confirmationTokenRepository.findByToken(confirmationToken);
+        if (optionalConfirmationToken.isPresent()){
+            final ConfirmationToken token = optionalConfirmationToken.get();
+            var user = token.getUser();
+            if (user!=null){
+                user.setEnabled(true);
+                _userRepository.save(user);
+                return ResponseEntity.ok("Email verified successfully!");
+            }
+        }
+        return ResponseEntity.badRequest().body("Error: Couldn't verify email");
+    }
+
+
+}
+
