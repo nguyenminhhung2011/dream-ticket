@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -31,13 +32,15 @@ public class User implements UserDetails {
     private String phone;
     private String email;
     private String address;
-
     private String gender;
 
     @Enumerated(EnumType.STRING)
     private AppUserRole role;
     private Boolean locked;
     private Boolean enabled;
+
+    @OneToMany(mappedBy = "user")
+    private List<AppToken> tokens;
 
     public User(String username, String password, String name, String identityCard, String phone, String email, String address, String gender, AppUserRole role, Boolean locked, Boolean enabled) {
         this.username = username;

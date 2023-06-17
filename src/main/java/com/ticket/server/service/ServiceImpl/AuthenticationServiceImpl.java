@@ -1,22 +1,25 @@
 package com.ticket.server.service.ServiceImpl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticket.server.config.JwtService;
 import com.ticket.server.model.*;
+import com.ticket.server.repository.AppTokenRepository;
 import com.ticket.server.repository.ConfirmationTokenRepository;
 import com.ticket.server.repository.UserRepository;
 import com.ticket.server.service.EmailService;
 import com.ticket.server.service.IService.IAuthenticationService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -29,6 +32,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final ConfirmationTokenRepository _confirmationTokenRepository;
     private final AuthenticationManager _authenticationManager;
     private final EmailService _emailService;
+    private final AppTokenRepository appTokenRepository;
+
+
     @Override
     public ResponseEntity<?> register(RegisterRequest request) {
         User user = User.builder()
@@ -42,9 +48,15 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 .password(_passwordEncoder.encode(request.getPassword())).build();
 
         User savedUser = _userRepository.save(user);
-        final String jwtToken = _jwtService.generateToken(savedUser);
+        final AppToken jwtToken = _jwtService.generateAccessToken(savedUser).user(savedUser).build();
 
-        ConfirmationToken confirmationToken = ConfirmationToken.builder().token(jwtToken).createdAt(LocalDateTime.now()).user(user).build();
+        ConfirmationToken confirmationToken = ConfirmationToken.builder()
+                .token(jwtToken.getToken())
+                .createdAt(new Date(System.currentTimeMillis()))
+                .expiredAt(jwtToken.getExpiredTime())
+                .user(user)
+                .build();
+
         _confirmationTokenRepository.save(confirmationToken);
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -66,9 +78,20 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         if (user.isPresent()){
             User _user = user.get();
-            String jwtToken = _jwtService.generateToken(_user);
 
-            return AuthenticationResponse.builder().message("Login Successfully").isSuccess(true).token(jwtToken).build();
+            AppToken jwtToken = _jwtService.generateAccessToken(_user).user(_user).build();
+            final AppToken refreshToken = _jwtService.generateRefreshToken(_user).user(_user).build();
+
+            //save access token
+            appTokenRepository.save(jwtToken);
+
+            return AuthenticationResponse.builder()
+                    .message("Login Successfully")
+                    .isSuccess(true)
+                    .refreshToken(refreshToken.getToken())
+                    .accessToken(jwtToken.getToken())
+                    .expiredTime(jwtToken.getExpiredTime().getTime())
+                    .build();
         }
 
         return AuthenticationResponse.builder().message("Can not found user in the database").isSuccess(false).build();
@@ -82,11 +105,63 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             var user = token.getUser();
             if (user!=null){
                 user.setEnabled(true);
+                token.setConfirmAt(new Date(System.currentTimeMillis()));
                 _userRepository.save(user);
-                return ResponseEntity.ok("Email verified successfully!");
+                return ResponseEntity.ok("Email verified successfully !");
             }
         }
         return ResponseEntity.badRequest().body("Error: Couldn't verify email");
+    }
+
+    private void revokeAllUserToken(User user){
+        var validUserToken = appTokenRepository.findALlValidTokenByUser(user.getId());
+
+        if (validUserToken.isEmpty()) return;
+
+        validUserToken.forEach(appToken -> {
+            appToken.setRevoke(true);
+            appToken.setExpired(true);
+        });
+
+        appTokenRepository.saveAll(validUserToken);
+    }
+
+    @Override
+    public void refreshToken(HttpServletResponse response, String refreshToken) {
+        final String username = _jwtService.extractUsername(refreshToken);
+
+        if (username != null){
+            try {
+                var user = _userRepository.findByUsername(username).orElseThrow();
+
+                if (_jwtService.isTokenValid(refreshToken,user)){
+                    revokeAllUserToken(user);
+
+                    final AppToken accessToken= _jwtService.generateAccessToken(user).build();
+
+                    appTokenRepository.save(accessToken);
+
+                    new ObjectMapper().writeValue(response.getOutputStream(),
+                            AuthenticationResponse
+                                    .builder()
+                                    .accessToken(accessToken.getToken())
+                                    .refreshToken(refreshToken)
+                                    .expiredTime(accessToken.getExpiredTime().getTime())
+                                    .isSuccess(true)
+                                    .build()
+                            );
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else{
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), "Can not found valid user ");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 
