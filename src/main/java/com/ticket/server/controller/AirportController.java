@@ -3,6 +3,7 @@ package com.ticket.server.controller;
 import com.ticket.server.dtos.AirportDtos.AddAirportDto;
 import com.ticket.server.dtos.AirportDtos.AirportDto;
 import com.ticket.server.dtos.AirportDtos.EditAirportDto;
+import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Airport;
 import com.ticket.server.service.IService.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class AirportController {
                 .map(AirportDto::new)
                 .orElseThrow(this::throwNotFoundException);
     }
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/id={id}")
     public @ResponseBody AirportDto getAirport(@PathVariable("id") Long id){
         return airportService.getAirport(id)
                 .map(AirportDto::new)
@@ -61,15 +62,25 @@ public class AirportController {
     }
 
     @GetMapping("/page/cursor={cursor}&pageSize={pageSize}")
-    public @ResponseBody List<AirportDto> getAirportByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
-        return airportService.getAirportByPage(cursor, pageSize).stream()
+    public @ResponseBody SimpleResponse<AirportDto> getAirportByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
+        var airports =  airportService.getAirportByPage(cursor, pageSize).stream()
                 .map(AirportDto::new)
-                .collect(Collectors.toList());
+                .toList();
+        var totalPages = airportService.getPages(pageSize);
+        return new SimpleResponse<AirportDto>(cursor, pageSize, totalPages, airports);
     }
 
     @GetMapping("/")
     public @ResponseBody List<AirportDto> getAllAirport() {
         return airportService.getAllAirport().stream()
+                .map(AirportDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filter/keyword={keyword}")
+    public @ResponseBody List<AirportDto> filterAirports(@PathVariable("keyword") String keyword){
+        return  airportService.getAirportByFilter(keyword)
+                .stream()
                 .map(AirportDto::new)
                 .collect(Collectors.toList());
     }

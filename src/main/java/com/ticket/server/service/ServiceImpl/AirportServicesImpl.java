@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,14 @@ public class AirportServicesImpl implements IAirportService {
     }
 
     @Override
+    public List<Airport> getAirportByFilter(String keyword) {
+        if(keyword.isEmpty()){
+            return null;
+        }
+        return airportRepository.findByFilter(keyword);
+    }
+
+    @Override
     public void deleteAirport(Long id) {
         try {
             airportRepository.deleteById(id);
@@ -71,5 +80,11 @@ public class AirportServicesImpl implements IAirportService {
     @Override
     public Airport saveAirport(Airport airport) {
         return airportRepository.save(airport);
+    }
+
+    @Override
+    public Integer getPages( int pageSize) {
+        long airportCount = airportRepository.count();
+        return (Integer) (int) Math.ceil((double) airportCount/ pageSize);
     }
 }
