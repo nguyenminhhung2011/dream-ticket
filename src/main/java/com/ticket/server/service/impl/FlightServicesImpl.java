@@ -82,4 +82,17 @@ public class FlightServicesImpl implements IFlightService {
     public Integer getPages(int pageSize) {
         long flightCount = flightRepository.count();
         return (Integer) (int) Math.ceil((double) flightCount/ pageSize);    }
+
+    @Override
+    public List<Flight> filterFlight(String locationArrival,
+                                     String locationDeparture,
+                                     String airlineName,
+                                     Integer limit,
+                                     Integer offset) {
+        return flightRepository.filterFlight(locationArrival,
+                                            locationDeparture,
+                                            airlineName,
+                                            limit,
+                                            offset);
+    }
 }

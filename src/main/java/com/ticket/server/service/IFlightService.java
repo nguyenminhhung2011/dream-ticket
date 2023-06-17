@@ -26,4 +26,11 @@ public interface IFlightService {
     public List<Flight> getFlightByPage(int cursor, int pageSize) ;
     public  Integer getPages(int pageSize);
 
+    public  List<Flight> filterFlight(String locationDeparture,
+                                      String locationArrival,
+                                      String airlineName,
+                                      Integer limit,
+                                      Integer offset);
+
+
 }

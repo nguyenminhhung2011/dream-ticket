@@ -1,11 +1,13 @@
 package com.ticket.server.dtos.FlightDtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ticket.server.entities.Airline;
 import com.ticket.server.entities.Airport;
 import com.ticket.server.entities.Flight;
+import lombok.Data;
 
 import java.util.Date;
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FlightDto {
     private Long id;
     private Airport departureAirport;
@@ -78,5 +80,17 @@ public class FlightDto {
         departureTime = flight.getDepartureTime();
         arrivalTime = flight.getArrivalTime();
         airline = flight.getAirline();
+    }
+
+    @Override
+    public String toString() {
+        return "FlightDto{" +
+                "id=" + id +
+                ", departureAirport=" + departureAirport.getLocation() +
+                ", arrivalAirport=" + arrivalAirport.getLocation() +
+                ", airline=" + airline.getAirlineName() +
+                ", departureTime=" + departureTime +
+                ", arrivalTime=" + arrivalTime +
+                '}';
     }
 }

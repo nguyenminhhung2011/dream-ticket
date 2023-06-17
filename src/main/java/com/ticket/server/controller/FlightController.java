@@ -36,7 +36,7 @@ public class FlightController {
                 addFlightDto.getDepartureTime(),
                 addFlightDto.getArrivalTime()
         );
-            return new FlightDto(flightService.addFlight(flight));
+        return new FlightDto(flightService.addFlight(flight));
     }
 
     @GetMapping("/id={id}")
@@ -53,7 +53,23 @@ public class FlightController {
                 .map(FlightDto::new)
                 .collect(Collectors.toList());
     }
+    @GetMapping("/filter/cursor={cursor}&pageSize={pageSize}")
+    public @ResponseBody List<FlightDto> filterFlight(
+            @RequestParam(name = "locationArrival") String locationArrival,
+            @RequestParam(name= "locationDeparture") String locationDeparture,
+            @RequestParam(name = "airlineName") String airlineName,
+            @PathVariable("cursor") Integer cursor,
+            @PathVariable("pageSize") Integer pageSize
+    ){
 
+        return flightService.filterFlight(
+                locationArrival,
+                locationDeparture,
+                airlineName,
+                pageSize,
+                cursor * pageSize
+        ).stream().map(FlightDto::new).collect(Collectors.toList());
+    }
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFlight(@PathVariable Long id){
@@ -101,13 +117,16 @@ public class FlightController {
                 .collect(Collectors.toList());
     }
     @GetMapping("/page/cursor={cursor}&pageSize={pageSize}")
-    public @ResponseBody SimpleResponse<FlightDto> getAirportByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
+    public @ResponseBody SimpleResponse<FlightDto> getFlightByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
         var flights =  flightService.getFlightByPage(cursor, pageSize).stream()
                 .map(FlightDto::new)
                 .toList();
         var totalPages = flightService.getPages(pageSize);
         return new SimpleResponse<FlightDto>(cursor, pageSize, totalPages, flights);
     }
+
+
+
     private ResponseStatusException throwNotFoundException(){
         return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }

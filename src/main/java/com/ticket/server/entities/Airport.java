@@ -1,5 +1,6 @@
 package com.ticket.server.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "airport")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

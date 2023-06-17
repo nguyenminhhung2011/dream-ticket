@@ -1,9 +1,11 @@
 package com.ticket.server.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "airline")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Airline {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
