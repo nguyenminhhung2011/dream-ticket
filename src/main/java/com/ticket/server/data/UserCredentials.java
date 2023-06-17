@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UserCredentials {
-    private String accountName;
+    private String username;
     private String password;
 }
