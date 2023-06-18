@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class FlightController {
     private final IFlightService flightService;
 
-    public FlightController(@Autowired IFlightService flightService) {
+    public FlightController( IFlightService flightService) {
         this.flightService = flightService;
     }
 

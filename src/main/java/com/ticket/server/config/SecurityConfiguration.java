@@ -74,7 +74,6 @@ public class SecurityConfiguration {
 
                         SecurityContextHolder.clearContext();
                     })
-
                     .and()
                     .build();
         } catch (Exception e) {
