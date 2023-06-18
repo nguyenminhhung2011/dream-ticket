@@ -9,14 +9,11 @@ import com.ticket.server.service.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.print.attribute.standard.Media;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RequestMapping(value = "/api/v1/airport", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController

@@ -1,5 +1,6 @@
 package com.ticket.server.model;
 
+import com.ticket.server.entities.Flight;
 import jakarta.persistence.*;
 import lombok.Data;
 

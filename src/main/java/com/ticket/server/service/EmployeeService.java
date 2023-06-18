@@ -2,7 +2,6 @@ package com.ticket.server.service;
 
 import com.ticket.server.data.UserCredentials;
 import com.ticket.server.model.Employee;
-import com.ticket.server.model.Flight;
 import com.ticket.server.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URI;
 import java.util.List;
