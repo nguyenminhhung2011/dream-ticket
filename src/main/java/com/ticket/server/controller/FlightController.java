@@ -7,6 +7,7 @@ import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Flight;
 import com.ticket.server.service.IFlightService;
+import org.hibernate.Internal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,27 @@ public class FlightController {
                 cursor * pageSize
         ).stream().map(FlightDto::new).collect(Collectors.toList());
     }
+
+    @GetMapping("/departureId={id}")
+    public  @ResponseBody List<FlightDto> getFlightByDepartureId(
+            @PathVariable("id")Integer id
+            ) {
+        return flightService.getFlightWithDepartureId(id)
+                .stream()
+                .map(FlightDto::new)
+                .collect(Collectors.toList());
+    }
+    @GetMapping("/arrivalId={id}")
+    public  @ResponseBody List<FlightDto> getFlightByArrivalId(
+            @PathVariable("id")Integer id
+            ) {
+        return flightService.getFlightWithArrivalId(id)
+                .stream()
+                .map(FlightDto::new)
+                .collect(Collectors.toList());
+    }
+
+
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFlight(@PathVariable Long id){

@@ -95,4 +95,14 @@ public class FlightServicesImpl implements IFlightService {
                                             limit,
                                             offset);
     }
+
+    @Override
+    public List<Flight> getFlightWithArrivalId(Integer id) {
+        return flightRepository.getFlightWithArrivalId(id);
+    }
+
+    @Override
+    public List<Flight> getFlightWithDepartureId(Integer id) {
+        return flightRepository.getFlightDepartureId(id);
+    }
 }

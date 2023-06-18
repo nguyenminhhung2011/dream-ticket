@@ -32,5 +32,7 @@ public interface IFlightService {
                                       Integer limit,
                                       Integer offset);
 
+    public  List<Flight> getFlightWithArrivalId(Integer id);
+    public  List<Flight> getFlightWithDepartureId(Integer id);
 
 }
