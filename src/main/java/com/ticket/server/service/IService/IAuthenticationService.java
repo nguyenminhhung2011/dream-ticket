@@ -1,10 +1,8 @@
 package com.ticket.server.service.IService;
 
-
 import com.ticket.server.model.AuthenticationRequest;
 import com.ticket.server.model.AuthenticationResponse;
 import com.ticket.server.model.RegisterRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface IAuthenticationService {
@@ -14,6 +12,6 @@ public interface IAuthenticationService {
 
     ResponseEntity<?> confirmEmail(String confirmationToken);
 
-    void refreshToken(HttpServletResponse response,String refreshToken);
+    ResponseEntity<?> refreshToken(String refreshToken);
 }
 

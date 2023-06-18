@@ -127,43 +127,34 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
-    public void refreshToken(HttpServletResponse response, String refreshToken) {
+    public ResponseEntity<?> refreshToken(String refreshToken) {
         final String username = _jwtService.extractUsername(refreshToken);
 
         if (username != null){
-            try {
-                var user = _userRepository.findByUsername(username).orElseThrow();
+            var user = _userRepository.findByUsername(username).orElseThrow();
 
-                if (_jwtService.isTokenValid(refreshToken,user)){
-                    revokeAllUserToken(user);
+            if (_jwtService.isTokenValid(refreshToken,user)){
+                revokeAllUserToken(user);
 
-                    final AppToken accessToken= _jwtService.generateAccessToken(user).build();
+                final AppToken accessToken= _jwtService.generateAccessToken(user).build();
 
-                    appTokenRepository.save(accessToken);
+                appTokenRepository.save(accessToken);
 
-                    new ObjectMapper().writeValue(response.getOutputStream(),
-                            AuthenticationResponse
-                                    .builder()
-                                    .accessToken(accessToken.getToken())
-                                    .refreshToken(refreshToken)
-                                    .expiredTime(accessToken.getExpiredTime().getTime())
-                                    .isSuccess(true)
-                                    .build()
-                            );
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                return ResponseEntity.ok(AuthenticationResponse
+                        .builder()
+                        .accessToken(accessToken.getToken())
+                        .refreshToken(refreshToken)
+                        .expiredTime(accessToken.getExpiredTime().getTime())
+                        .isSuccess(true)
+                        .build());
             }
         }
-        else{
-            try {
-                new ObjectMapper().writeValue(response.getOutputStream(), "Can not found valid user ");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+            return ResponseEntity.badRequest().body(AuthenticationResponse
+                    .builder()
+                    .message("Can not found valid user ")
+                    .isSuccess(true)
+                    .build());
     }
-
 
 }
 

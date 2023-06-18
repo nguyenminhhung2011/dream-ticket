@@ -26,11 +26,16 @@ public class AuthenticationController {
     private final IAuthenticationService _authAuthenticationService;
     @Transactional
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<?> register(
+            @RequestBody RegisterRequest request
+    ){
         return _authAuthenticationService.register(request);
     }
 
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody AuthenticationRequest request
+    ){
             return ResponseEntity.ok(_authAuthenticationService.authenticate(request));
     }
 
@@ -40,32 +45,17 @@ public class AuthenticationController {
     }
 
     @GetMapping("/refresh_token")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response){
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.contains("Bearer")){
-            ResponseEntity.badRequest().body("Missing header authorization");
-            try {
-                new ObjectMapper().writeValue(response.getOutputStream(), "Missing header authorization");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            return ResponseEntity.badRequest().body("Missing header authorization");
         }
 
-        try {
-            assert authHeader != null;
-            final String refreshToken = authHeader.substring(7);
-             _authAuthenticationService.refreshToken(response,refreshToken);
-             return;
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-        try {
-            new ObjectMapper().writeValue(response.getOutputStream(), "Can not found refresh token in header authorization");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        final String refreshToken = authHeader.substring(7);
+        return _authAuthenticationService.refreshToken(refreshToken);
     }
+
+
 }

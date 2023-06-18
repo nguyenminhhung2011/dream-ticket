@@ -1,10 +1,7 @@
 package com.ticket.server.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,12 +9,15 @@ import java.util.Date;
 @Data
 @Builder
 @Entity
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class AppToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tokenId")
     private Long id;
 
+    @Column(unique = true)
     private String token;
     private Date expiredTime;
     private boolean isExpired;
@@ -26,4 +26,5 @@ public class AppToken {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     public User user;
+
 }

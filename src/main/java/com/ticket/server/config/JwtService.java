@@ -20,23 +20,31 @@ import java.util.function.Function;
 public class JwtService {
     private static final String SECRET_KEY =  "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
-    private final Date expiredAccessToken = new Date(System.currentTimeMillis()+ 1000*60*24);
-    private final Date expiredRefreshToken =new Date(System.currentTimeMillis()+ 1000*60*48);
+//    private final Date expiredAccessToken = new Date(System.currentTimeMillis()+ 1000*60*24);
+//    private final Date expiredRefreshToken =new Date(System.currentTimeMillis()+ 1000*60*48);
+
+    private Date expiredAccessToken(){
+        return new Date(System.currentTimeMillis()+ 1000*60*24);
+    }
+
+    private Date expiredRefreshToken(){
+        return new Date(System.currentTimeMillis()+ 1000*60*48);
+    }
     public String extractUsername(String token){
         return extractClaims(token,Claims::getSubject);
     }
 
     public AppToken.AppTokenBuilder generateAccessToken(UserDetails userDetails){
         return AppToken.builder()
-                .token(generateToken(new HashMap<>(),userDetails,expiredAccessToken))
-                .expiredTime(expiredAccessToken)
+                .token(generateToken(new HashMap<>(),userDetails,expiredAccessToken()))
+                .expiredTime(expiredAccessToken())
                 .isExpired(false)
                 .isRevoke(false);
     }
     public AppToken.AppTokenBuilder generateRefreshToken(UserDetails userDetails){
         return AppToken.builder()
-                .token(generateToken(new HashMap<>(),userDetails,expiredRefreshToken)).
-                expiredTime(expiredRefreshToken)
+                .token(generateToken(new HashMap<>(),userDetails,expiredRefreshToken())).
+                expiredTime(expiredRefreshToken())
                 .isExpired(false)
                 .isRevoke(false);
     }
