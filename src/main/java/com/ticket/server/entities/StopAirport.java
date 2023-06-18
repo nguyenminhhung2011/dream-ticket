@@ -1,6 +1,7 @@
-package com.ticket.server.model;
+package com.ticket.server.entities;
 
 import com.ticket.server.entities.Airport;
+import com.ticket.server.entities.Flight;
 import jakarta.persistence.*;
 import lombok.Data;
 

@@ -10,5 +10,5 @@ public interface AirportRepository extends JpaRepository<Airport, Long> {
 
     //🐼Update after with filter
     @Query( value = "SELECT p.* FROM airport p WHERE p.airport_name LIKE %?1%", nativeQuery = true)
-    public List<Airport> findByFilter(String keyword);
+    List<Airport> findByFilter(String keyword);
 }

@@ -67,13 +67,6 @@ public class AirportServicesImpl implements IAirportService {
             return Optional.empty();
         }
         airport.setId(id);
-        airport.setAirportName(airport.getAirportName());
-        airport.setLocation(airport.getLocation());
-        airport.setImageUrl(airport.getImageUrl());
-        airport.setDescription(airport.getDescription());
-        airport.setCloseTime(airport.getCloseTime());
-        airport.setOpenTime(airport.getOpenTime());
-
         return Optional.of(airportRepository.save(airport));
     }
 
