@@ -21,9 +21,9 @@ public class CustomerEntity {
     private String phone;
     private String email;
 
-    @OneToMany(mappedBy = "payment_entity")
+    @OneToMany
     private List<PaymentEntity> payments;
 
-    @OneToMany(mappedBy = "credit_card_entity")
+    @OneToMany
     private List<CreditCardEntity> creditCards;
 }

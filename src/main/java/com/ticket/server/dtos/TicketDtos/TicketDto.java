@@ -1,25 +1,24 @@
 package com.ticket.server.dtos.TicketDtos;
 
 import com.ticket.server.entities.TicketEntity;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class TicketDto {
-    private Long id;
+    private long id;
     private String name;
     private String gender;
     private String phoneNumber;
     private String emailAddress;
     private String seat;
-    private Double luggage;
-    private Long birthday;
-    private Long timeBought;
+    private double luggage;
+    private long birthday;
+    private long timeBought;
 
     static public TicketDto fromEntity(TicketEntity entity){
         return TicketDto

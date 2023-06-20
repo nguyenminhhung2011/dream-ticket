@@ -3,9 +3,7 @@ package com.ticket.server.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ticket.server.enums.Gender;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,7 +11,8 @@ import java.util.Date;
 @Table(name = "ticket_entity")
 @Data
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TicketEntity {
 
@@ -47,11 +46,20 @@ public class TicketEntity {
     private Date timeBought;
 
     @ManyToOne
-    @JoinColumn(name = "ticketInformation")
+    @JoinColumns({
+            @JoinColumn(name = "flight", referencedColumnName = "flight_id"),
+            @JoinColumn(name = "type", referencedColumnName = "ticket_type")
+    }
+    )
     private TicketInformationEntity ticketInformation;
 
     @ManyToOne
-    @JoinColumn(name = "payment_entity")
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
     private PaymentEntity payment;
+
 }
 

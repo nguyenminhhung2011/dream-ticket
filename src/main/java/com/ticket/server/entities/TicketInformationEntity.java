@@ -13,23 +13,17 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 public class TicketInformationEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "flight_id")
-    private Flight flight;
+    @EmbeddedId
+    TicketInformationEntityId id;
 
     @Column(nullable = false)
     private int quantity;
+
     @Column(nullable = false)
     private double price;
-    @Column(nullable = false)
-    private int ticketType;
 
     @OneToMany
-    @JoinColumn(name = "ticket_id")
     private List<TicketEntity> ticket;
 }
+
+

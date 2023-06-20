@@ -68,7 +68,6 @@ public class FlightServicesImpl implements IFlightService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
         return flightRepository.findAll(pageable).getContent();
-
     }
 
     @Override

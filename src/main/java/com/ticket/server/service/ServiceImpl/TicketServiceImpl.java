@@ -2,10 +2,13 @@ package com.ticket.server.service.ServiceImpl;
 
 import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
-import com.ticket.server.entities.TicketEntity;
+import com.ticket.server.entities.*;
+import com.ticket.server.enums.PaymentStatus;
 import com.ticket.server.model.GetListDataRequest;
 import com.ticket.server.model.GetListDataResponse;
 import com.ticket.server.model.Ticket;
+import com.ticket.server.repository.FlightRepository;
+import com.ticket.server.repository.TicketInformationRepository;
 import com.ticket.server.repository.TicketRepository;
 import com.ticket.server.service.IService.ITicketService;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.awt.print.Pageable;
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -31,25 +35,71 @@ import java.util.Optional;
 public class TicketServiceImpl implements ITicketService {
 
     private final TicketRepository ticketRepository;
+    private final FlightRepository flightRepository;
+    private final TicketInformationRepository  ticketInfoRepository;
 
     @Override
-    public TicketDto addTicket(AddTicketRequest request) {
-        final TicketEntity ticketEntity = TicketEntity
+    public TicketDto addTicket(AddTicketRequest request) throws Exception {
+        final Optional<Flight> flightOptional = flightRepository.findById(request.getFlightId());
+
+        if (flightOptional.isEmpty()){
+            throw new Exception("Can not found any flight have id " + request.getFlightId());
+        }
+
+        final Flight flight = flightOptional.get();
+
+        List<TicketEntity> ticketEntities = new ArrayList<>();
+
+        PaymentEntity paymentEntity = PaymentEntity
                 .builder()
-                .name(request.getName())
-                .gender(request.getGender())
-                .dob(Date.from(Instant.ofEpochMilli(request.getDob())))
-                .emailAddress(request.getEmailAddress())
-                .seat(request.getSeat())
-                .timeBought(Date.from(Instant.now()))
-                .phoneNumber(request.getPhoneNumber())
-                .luggage(request.getLuggage())
+                .createdDate(Date.from(Instant.now()).getTime())
+                .paymentType(request.getPaymentType())
                 .build();
 
-        final TicketEntity result =  ticketRepository.save(ticketEntity);
+        request.getTickets().forEach(ticketRequest -> {
+            final Optional<TicketInformationEntity> optionalTicketInfoEntity =  ticketInfoRepository
+                    .findById( new TicketInformationEntityId(
+                    ticketRequest.getTicketType(),flight)
+                    );
 
-        return TicketDto.fromEntity(result);
+            if (optionalTicketInfoEntity.isEmpty()){
+                try {
+                    throw new Exception("Can not found any flight have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getTicketType());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            final TicketEntity ticketEntity = TicketEntity
+                    .builder()
+                    .name(ticketRequest.getName())
+                    .gender(ticketRequest.getGender())
+                    .dob(Date.from(Instant.ofEpochMilli(ticketRequest.getDob())))
+                    .emailAddress(ticketRequest.getEmailAddress())
+                    .seat(ticketRequest.getSeat())
+                    .timeBought(Date.from(Instant.now()))
+                    .phoneNumber(ticketRequest.getPhoneNumber())
+                    .luggage(ticketRequest.getLuggage())
+                    .ticketInformation(optionalTicketInfoEntity.get())
+                    .flight(flight)
+//                    .payment()
+                    .build();
+        });
+
+
+
+
+
+//        final TicketEntity result =  ticketRepository.save(ticketEntity);
+
+//        return TicketDto.fromEntity(result);
+        return null;
     }
+
+
+
+
+
 
     @Override
     public TicketDto getTicket(Long id) throws Exception {
@@ -89,10 +139,9 @@ public class TicketServiceImpl implements ITicketService {
         return new GetListDataResponse<>(total,data);
     }
 
-    @Override
-    public List<TicketDto> getListTicket(GetListDataRequest request) {
+
+    public GetListDataResponse<TicketDto> getTicketByFilter(){
         return null;
     }
-
 
 }

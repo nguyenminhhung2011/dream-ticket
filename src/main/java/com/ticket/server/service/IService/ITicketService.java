@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ITicketService {
-    TicketDto addTicket(AddTicketRequest request);
+    TicketDto addTicket(AddTicketRequest request) throws Exception;
 
     TicketDto getTicket(Long id) throws Exception;
 
@@ -24,6 +24,4 @@ public interface ITicketService {
     TicketDto updateTicket(Long id, AddTicketRequest request);
 
     GetListDataResponse<TicketDto> getTicketByPage(int page, int perPage);
-
-    List<TicketDto> getListTicket(GetListDataRequest request);
 }

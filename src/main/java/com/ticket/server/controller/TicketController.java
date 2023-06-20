@@ -80,12 +80,15 @@ public class TicketController {
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
-    @GetMapping("/get")
-    public ResponseEntity<?> getListTicket(@RequestBody GetListDataRequest request){
-        try {
-            return ResponseEntity.ok(ticketService.getListTicket(request));
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
-    }
+
+
+
+//    @GetMapping("/get")
+//    public ResponseEntity<?> getListTicket(@RequestBody GetListDataRequest request){
+//        try {
+//            return ResponseEntity.ok(ticketService.getListTicket(request));
+//        }catch (Exception e){
+//            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+//        }
+//    }
 }
