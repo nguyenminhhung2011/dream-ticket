@@ -42,6 +42,8 @@ public class SimpleResponse<T> {
 
     private Integer totalPages;
 
+
+
     public SimpleResponse(Integer currentPage, Integer pageSize,Integer totalPages, List<T> responseData) {
         this.currentPage = currentPage;
         this.pageSize = pageSize;

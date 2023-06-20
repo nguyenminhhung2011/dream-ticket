@@ -1,63 +1,98 @@
-package com.ticket.server.service.impl;
+package com.ticket.server.service.ServiceImpl;
 
+import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
+import com.ticket.server.dtos.TicketDtos.TicketDto;
+import com.ticket.server.entities.TicketEntity;
+import com.ticket.server.model.GetListDataRequest;
+import com.ticket.server.model.GetListDataResponse;
 import com.ticket.server.model.Ticket;
 import com.ticket.server.repository.TicketRepository;
-import com.ticket.server.service.ITicketService;
+import com.ticket.server.service.IService.ITicketService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.ObjectNotFoundException;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.net.URI;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TicketServiceImpl implements ITicketService {
-    @Autowired
-    private final TicketRepository TicketRepository;
 
-    public TicketServiceImpl(TicketRepository TicketRepository) {
-        this.TicketRepository = TicketRepository;
+    private final TicketRepository ticketRepository;
+
+    @Override
+    public TicketDto addTicket(AddTicketRequest request) {
+        final TicketEntity ticketEntity = TicketEntity
+                .builder()
+                .name(request.getName())
+                .gender(request.getGender())
+                .dob(Date.from(Instant.ofEpochMilli(request.getDob())))
+                .emailAddress(request.getEmailAddress())
+                .seat(request.getSeat())
+                .timeBought(Date.from(Instant.now()))
+                .phoneNumber(request.getPhoneNumber())
+                .luggage(request.getLuggage())
+                .build();
+
+        final TicketEntity result =  ticketRepository.save(ticketEntity);
+
+        return TicketDto.fromEntity(result);
     }
 
-    public ResponseEntity<Ticket> addTicket(Ticket Ticket){
-        Ticket createdTicket = TicketRepository.save(Ticket);
-        return ResponseEntity.created(URI.create("/ticket/" + createdTicket.getId())).body(createdTicket);
-    }
-
-    public ResponseEntity<Ticket> getTicket(Long id){
-        Optional<Ticket> optionalTicket = TicketRepository.findById(id);
-        return optionalTicket.map(Ticket -> ResponseEntity.ok().body(Ticket))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    public List<Ticket> getAllTicket(){
-        return TicketRepository.findAll();
-    }
-
-    public ResponseEntity<Ticket> deleteTicket(Long id){
-        Optional<Ticket> optionalTicket = TicketRepository.findById(id);
-        if(optionalTicket.isPresent()){
-            TicketRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    @Override
+    public TicketDto getTicket(Long id) throws Exception {
+        final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);
+        if (optionalTicketEntity.isPresent()){
+            return TicketDto.fromEntity(optionalTicketEntity.get());
+        }
+        else{
+            throw new Exception("Can not found ticket corresponding");
         }
     }
 
-    public ResponseEntity<Ticket> updateTicket(Long id, Ticket Ticket){
-        Optional<Ticket> optionalTicket = TicketRepository.findById(id);
-        if(optionalTicket.isPresent()){
-            Ticket updatedTicket = optionalTicket.get();
-            updatedTicket.setFullName(Ticket.getFullName());
-            updatedTicket.setIdentityCard(Ticket.getIdentityCard());
-            updatedTicket.setPhone(Ticket.getPhone());
-            updatedTicket.setFlight(Ticket.getFlight());
-
-            TicketRepository.save(updatedTicket);
-            return ResponseEntity.ok().body(updatedTicket);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @Override
+    public List<TicketDto> getAllTicket() {
+        return ticketRepository.findAll().stream().map(TicketDto::fromEntity).toList();
     }
+
+    @Override
+    public boolean deleteTicket(Long id) {
+        return false;
+    }
+
+    @Override
+    public TicketDto updateTicket(Long id, AddTicketRequest request) {
+        return null;
+    }
+
+    @Override
+    public GetListDataResponse<TicketDto> getTicketByPage(int page,int perPage) {
+        final long total = ticketRepository.count();
+
+        final PageRequest pageRequest = PageRequest.of(page, perPage);
+
+        final Page<TicketEntity> ticketEntityPage = ticketRepository.findAll(pageRequest);
+        final List<TicketDto> data = ticketEntityPage.getContent().stream().map(TicketDto::fromEntity).toList();
+
+        return new GetListDataResponse<>(total,data);
+    }
+
+    @Override
+    public List<TicketDto> getListTicket(GetListDataRequest request) {
+        return null;
+    }
+
+
 }
