@@ -22,6 +22,5 @@ public class TicketInformationEntityId implements Serializable {
     private int ticketType;
 
     @ManyToOne
-    @JoinColumn(name = "flight_id")
     private  Flight flight;
 }

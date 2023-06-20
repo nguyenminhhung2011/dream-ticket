@@ -2,12 +2,16 @@ package com.ticket.server.service.ServiceImpl;
 
 import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
+import com.ticket.server.dtos.TicketDtos.TicketFilterRequest;
+import com.ticket.server.dtos.TicketDtos.TicketRequest;
 import com.ticket.server.entities.*;
 import com.ticket.server.enums.PaymentStatus;
+import com.ticket.server.enums.PaymentType;
 import com.ticket.server.model.GetListDataRequest;
 import com.ticket.server.model.GetListDataResponse;
 import com.ticket.server.model.Ticket;
 import com.ticket.server.repository.FlightRepository;
+import com.ticket.server.repository.PaymentRepository;
 import com.ticket.server.repository.TicketInformationRepository;
 import com.ticket.server.repository.TicketRepository;
 import com.ticket.server.service.IService.ITicketService;
@@ -18,6 +22,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -37,9 +42,10 @@ public class TicketServiceImpl implements ITicketService {
     private final TicketRepository ticketRepository;
     private final FlightRepository flightRepository;
     private final TicketInformationRepository  ticketInfoRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
-    public TicketDto addTicket(AddTicketRequest request) throws Exception {
+    public boolean addTicket(AddTicketRequest request) throws Exception {
         final Optional<Flight> flightOptional = flightRepository.findById(request.getFlightId());
 
         if (flightOptional.isEmpty()){
@@ -48,7 +54,7 @@ public class TicketServiceImpl implements ITicketService {
 
         final Flight flight = flightOptional.get();
 
-        List<TicketEntity> ticketEntities = new ArrayList<>();
+        final List<TicketEntity> ticketEntities = new ArrayList<>();
 
         PaymentEntity paymentEntity = PaymentEntity
                 .builder()
@@ -56,11 +62,11 @@ public class TicketServiceImpl implements ITicketService {
                 .paymentType(request.getPaymentType())
                 .build();
 
+        paymentRepository.save(paymentEntity);
+
         request.getTickets().forEach(ticketRequest -> {
             final Optional<TicketInformationEntity> optionalTicketInfoEntity =  ticketInfoRepository
-                    .findById( new TicketInformationEntityId(
-                    ticketRequest.getTicketType(),flight)
-                    );
+                    .findById(new TicketInformationEntityId(ticketRequest.getTicketType(),flight));
 
             if (optionalTicketInfoEntity.isEmpty()){
                 try {
@@ -82,25 +88,17 @@ public class TicketServiceImpl implements ITicketService {
                     .luggage(ticketRequest.getLuggage())
                     .ticketInformation(optionalTicketInfoEntity.get())
                     .flight(flight)
-//                    .payment()
+                    .payment(paymentEntity)
                     .build();
+
+            ticketEntities.add(ticketEntity);
         });
+//        paymentEntity.setCustomers(CustomerEntity.builder().na.build());
 
+        final List<TicketEntity> result =  ticketRepository.saveAll(ticketEntities);
 
-
-
-
-//        final TicketEntity result =  ticketRepository.save(ticketEntity);
-
-//        return TicketDto.fromEntity(result);
-        return null;
+        return true;
     }
-
-
-
-
-
-
     @Override
     public TicketDto getTicket(Long id) throws Exception {
         final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);
@@ -118,13 +116,39 @@ public class TicketServiceImpl implements ITicketService {
     }
 
     @Override
-    public boolean deleteTicket(Long id) {
-        return false;
+    public void deleteTicket(Long id) {
+        ticketRepository.deleteById(id);
     }
 
     @Override
-    public TicketDto updateTicket(Long id, AddTicketRequest request) {
-        return null;
+    public TicketDto updateTicket(Long id, TicketRequest request) throws Exception {
+
+        if (!ticketRepository.existsById(id)){
+            throw new Exception("Can not found ticket entry corresponding");
+        }
+
+        final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);
+        final TicketEntity ticketEntity = optionalTicketEntity.get();
+
+        final TicketEntity newTicketEntity = ticketRepository.save(
+                TicketEntity
+                        .builder()
+                        .id(ticketEntity.getId())
+                        .payment(ticketEntity.getPayment())
+                        .flight(ticketEntity.getFlight())
+                        .ticketInformation(ticketEntity.getTicketInformation())
+                        .name(request.getName())
+                        .gender(request.getGender())
+                        .luggage(request.getLuggage())
+                        .seat(request.getSeat())
+                        .phoneNumber(request.getPhoneNumber())
+                        .timeBought(Date.from(Instant.ofEpochMilli(request.getTimeBought())))
+                        .emailAddress(request.getEmailAddress())
+                        .dob(Date.from(Instant.ofEpochMilli(request.getDob())))
+                        .build()
+        );
+
+        return TicketDto.fromEntity(newTicketEntity);
     }
 
     @Override
@@ -139,8 +163,10 @@ public class TicketServiceImpl implements ITicketService {
         return new GetListDataResponse<>(total,data);
     }
 
+    @Override
+    public GetListDataResponse<TicketDto> getTicketByFilter(TicketFilterRequest request) {
+//        Sort sort = !request.isAscending() ? new Sort().descending() : new Sort().ascending();
 
-    public GetListDataResponse<TicketDto> getTicketByFilter(){
         return null;
     }
 

@@ -13,8 +13,9 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 public class TicketInformationEntity {
+
     @EmbeddedId
-    TicketInformationEntityId id;
+    private TicketInformationEntityId id;
 
     @Column(nullable = false)
     private int quantity;
@@ -22,8 +23,7 @@ public class TicketInformationEntity {
     @Column(nullable = false)
     private double price;
 
-    @OneToMany
-    private List<TicketEntity> ticket;
+    @OneToMany()
+    private List<TicketEntity> tickets;
 }
-
 

@@ -46,11 +46,10 @@ public class TicketEntity {
     private Date timeBought;
 
     @ManyToOne
-    @JoinColumns({
+    @JoinColumns(value = {
             @JoinColumn(name = "flight", referencedColumnName = "flight_id"),
             @JoinColumn(name = "type", referencedColumnName = "ticket_type")
-    }
-    )
+    })
     private TicketInformationEntity ticketInformation;
 
     @ManyToOne

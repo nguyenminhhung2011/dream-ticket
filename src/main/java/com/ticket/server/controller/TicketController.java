@@ -2,6 +2,7 @@ package com.ticket.server.controller;
 
 import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
+import com.ticket.server.dtos.TicketDtos.TicketRequest;
 import com.ticket.server.model.GetListDataRequest;
 import com.ticket.server.model.ResponseModel;
 import com.ticket.server.model.Ticket;
@@ -16,7 +17,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api/v1/ticket")
 @RestController
@@ -25,7 +28,7 @@ public class TicketController {
 
     private final ITicketService ticketService;
 
-    @PostMapping("/add_ticket")
+    @PostMapping("/book_ticket")
     public ResponseEntity<?> addTicket(@RequestBody AddTicketRequest request){
         try {
             return ResponseEntity.ok(ticketService.addTicket(request));
@@ -53,10 +56,12 @@ public class TicketController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteTicket(@PathVariable Long id){
+    @DeleteMapping(value = "/delete",params = {"id"})
+    public ResponseEntity<?> deleteTicket(@RequestParam Long id){
         try {
-            final boolean result =  ticketService.deleteTicket(id);
+            ticketService.deleteTicket(id);
+            final Map<String,Object> result = new HashMap<>();
+            result.put("isSuccess",true);
             return ResponseEntity.ok(result);
         }catch(Exception e){
             return ResponseEntity.internalServerError().body("Server error: " + e.getMessage());
@@ -64,7 +69,7 @@ public class TicketController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateTicket(@PathVariable Long id, @RequestBody AddTicketRequest request){
+    public ResponseEntity<?> updateTicket(@PathVariable Long id, @RequestBody TicketRequest request){
         try {
             return ResponseEntity.ok(ticketService.updateTicket(id,request));
         }catch (Exception e){
