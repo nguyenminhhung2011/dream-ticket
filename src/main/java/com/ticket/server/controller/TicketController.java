@@ -1,8 +1,7 @@
 package com.ticket.server.controller;
 
-import com.ticket.server.model.Invoice;
 import com.ticket.server.model.Ticket;
-import com.ticket.server.service.TicketService;
+import com.ticket.server.service.impl.TicketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +12,9 @@ import java.util.List;
 @RestController
 public class TicketController {
     @Autowired
-    private final TicketService TicketService;
+    private final TicketServiceImpl TicketService;
 
-    public TicketController(TicketService TicketService) {
+    public TicketController(TicketServiceImpl TicketService) {
         this.TicketService = TicketService;
     }
 

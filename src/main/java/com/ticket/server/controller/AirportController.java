@@ -91,6 +91,8 @@ public class AirportController {
         airportService.deleteAirport(id);
     }
 
+
+
     private ResponseStatusException throwNotFoundException(){
         return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }

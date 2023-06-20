@@ -15,7 +15,6 @@ public class Ticket {
     private String fullName;
     private String identityCard;
     private String phone;
-
     @ManyToOne
     private Flight flight;
 }
