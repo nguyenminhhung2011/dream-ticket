@@ -1,7 +1,8 @@
-package com.ticket.server.service;
+package com.ticket.server.service.impl;
 
 import com.ticket.server.model.Ticket;
 import com.ticket.server.repository.TicketRepository;
+import com.ticket.server.service.ITicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TicketService {
+public class TicketServiceImpl implements ITicketService {
     @Autowired
     private final TicketRepository TicketRepository;
 
-    public TicketService(TicketRepository TicketRepository) {
+    public TicketServiceImpl(TicketRepository TicketRepository) {
         this.TicketRepository = TicketRepository;
     }
 

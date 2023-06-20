@@ -105,4 +105,9 @@ public class FlightServicesImpl implements IFlightService {
     public List<Flight> getFlightWithDepartureId(Integer id) {
         return flightRepository.getFlightDepartureId(id);
     }
+
+    @Override
+    public List<Flight> getFlightByAirportId(Integer id) {
+        return flightRepository.getFlightByAirportId(id);
+    }
 }

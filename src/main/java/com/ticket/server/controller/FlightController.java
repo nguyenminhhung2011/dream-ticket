@@ -91,6 +91,15 @@ public class FlightController {
                 .map(FlightDto::new)
                 .collect(Collectors.toList());
     }
+    @GetMapping("/airport={id}")
+    public  @ResponseBody List<FlightDto> getFlightByAirportId(
+            @PathVariable("id")Integer id
+            ) {
+        return flightService.getFlightByAirportId(id)
+                .stream()
+                .map(FlightDto::new)
+                .collect(Collectors.toList());
+    }
 
 
     @DeleteMapping("/delete/{id}")
