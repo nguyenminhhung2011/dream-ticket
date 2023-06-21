@@ -1,24 +1,13 @@
 package com.ticket.server.controller;
 
 import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
-import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.dtos.TicketDtos.TicketRequest;
-import com.ticket.server.model.GetListDataRequest;
-import com.ticket.server.model.ResponseModel;
-import com.ticket.server.model.Ticket;
 import com.ticket.server.service.IService.ITicketService;
-import com.ticket.server.service.ServiceImpl.TicketServiceImpl;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/api/v1/ticket")

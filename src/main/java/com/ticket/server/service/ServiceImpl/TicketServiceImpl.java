@@ -157,6 +157,8 @@ public class TicketServiceImpl implements ITicketService {
 
         final PageRequest pageRequest = PageRequest.of(page, perPage);
 
+
+
         final Page<TicketEntity> ticketEntityPage = ticketRepository.findAll(pageRequest);
         final List<TicketDto> data = ticketEntityPage.getContent().stream().map(TicketDto::fromEntity).toList();
 
