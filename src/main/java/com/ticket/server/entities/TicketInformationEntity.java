@@ -2,19 +2,21 @@ package com.ticket.server.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "ticket_information")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Data
-@RequiredArgsConstructor
 public class TicketInformationEntity {
 
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private TicketInformationEntityId id;
 
     @Column(nullable = false)

@@ -1,12 +1,10 @@
 package com.ticket.server.controller;
 
+import com.ticket.server.dtos.TicInformationDto.AddTicInformationRequest;
 import com.ticket.server.service.IService.ITicketInformationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/ticketInformation")
 @RestController
@@ -20,6 +18,15 @@ public class TicketInformationController {
             return ResponseEntity.ok(ticketInformationService.getTicketInformationByFlight(id));
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/add")
+    public  ResponseEntity<?> addTicketInformation(@RequestBody AddTicInformationRequest addTicInformationRequest){
+        try{
+            return ResponseEntity.ok(ticketInformationService.addTicketInformation(addTicInformationRequest));
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
     }
 }
