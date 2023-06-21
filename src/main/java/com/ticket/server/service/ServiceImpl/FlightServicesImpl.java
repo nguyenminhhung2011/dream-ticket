@@ -1,9 +1,8 @@
 package com.ticket.server.service.ServiceImpl;
 
-import com.ticket.server.entities.Airport;
 import com.ticket.server.entities.Flight;
 import com.ticket.server.repository.FlightRepository;
-import com.ticket.server.service.IFlightService;
+import com.ticket.server.service.IService.IFlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,13 +39,7 @@ public class FlightServicesImpl implements IFlightService {
     }
 
     @Override
-    public void deleteFlight(Long id) {
-        try{
-            flightRepository.deleteById(id);
-        } catch (Exception e){
-            // do nothing
-        }
-    }
+    public void deleteFlight(Long id) {flightRepository.deleteById(id);}
 
     @Override
     public Optional<Flight> updateFlight(Long id, Flight flight) {

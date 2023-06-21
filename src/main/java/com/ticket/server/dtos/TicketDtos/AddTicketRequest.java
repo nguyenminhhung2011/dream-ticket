@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class AddTicketRequest {
-        final List<TicketRequest> tickets;
+    final List<TicketRequest> tickets;
     final Long flightId;
     final PaymentType paymentType;
 }

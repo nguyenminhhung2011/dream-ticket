@@ -23,6 +23,11 @@ public class TicketInformationEntity {
     @Column(nullable = false)
     private double price;
 
+    @Column(nullable = false)
+    private int seatPosition;
+    @Column(nullable = false)
+    private String seatHeader;
+
     @OneToMany()
     private List<TicketEntity> tickets;
 }

@@ -4,10 +4,15 @@ import com.ticket.server.entities.Flight;
 import com.ticket.server.entities.TicketInformationEntity;
 import com.ticket.server.entities.TicketInformationEntityId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TicketInformationRepository extends JpaRepository<TicketInformationEntity, TicketInformationEntityId> {
-//    Optional<List<TicketInformationEntity>> findAllByTicketTypeAndFlight(int ticketType, Flight flight);
+    @Query(value = """
+                select t.* from ticket_information t
+                where t.flight = :flight
+            """,nativeQuery = true)
+    List<TicketInformationEntity> findAllByFlight(Long flight);
 }

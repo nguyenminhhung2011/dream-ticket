@@ -52,14 +52,7 @@ public class AirportServicesImpl implements IAirportService {
     }
 
     @Override
-    public void deleteAirport(Long id) {
-        try {
-            airportRepository.deleteById(id);
-        }
-        catch (Exception e){
-            // do nothing
-        }
-    }
+    public void deleteAirport(Long id) {airportRepository.deleteById(id);}
 
     @Override
     public Optional<Airport> updateAirport(Airport airport, Long id) {
