@@ -1,5 +1,6 @@
 package com.ticket.server.entities;
 
+import com.ticket.server.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +22,10 @@ public class CustomerEntity {
     private String phone;
     private String email;
 
-    @OneToMany
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @OneToMany(mappedBy = "id")
     private List<PaymentEntity> payments;
 
     @OneToMany

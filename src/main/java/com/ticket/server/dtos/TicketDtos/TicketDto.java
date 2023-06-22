@@ -19,6 +19,7 @@ public class TicketDto {
     private double luggage;
     private long birthday;
     private long timeBought;
+    private int type;
 
     static public TicketDto fromEntity(TicketEntity entity){
         return TicketDto
@@ -32,6 +33,7 @@ public class TicketDto {
                 .phoneNumber(entity.getPhoneNumber())
                 .luggage(entity.getLuggage())
                 .name(entity.getName())
+                .type(entity.getTicketInformation().getId().getTicketType())
                 .build();
     }
 

@@ -34,6 +34,8 @@ public class Flight {
     @OneToMany(mappedBy = "flight")
     private List<StopAirport> stops;
 
+
+
     public Long getId() {
         return id;
     }
