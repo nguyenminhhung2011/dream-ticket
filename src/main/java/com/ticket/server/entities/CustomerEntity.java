@@ -28,6 +28,6 @@ public class CustomerEntity {
     @OneToMany(mappedBy = "id")
     private List<PaymentEntity> payments;
 
-    @OneToMany
-    private List<CreditCardEntity> creditCards;
+//    @OneToMany
+//    private List<CreditCardEntity> creditCards;
 }

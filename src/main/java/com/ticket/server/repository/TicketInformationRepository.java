@@ -15,4 +15,10 @@ public interface TicketInformationRepository extends JpaRepository<TicketInforma
                 where t.flight = :flight
             """,nativeQuery = true)
     List<TicketInformationEntity> findAllByFlight(Long flight);
+    @Query(value = """
+                select t.* from ticket_information t
+                where t.flight_id = :flight
+                and t.ticket_type = :ticketType
+            """,nativeQuery = true)
+    Optional<TicketInformationEntity> findByFlightAndType(Long flight,int ticketType);
 }

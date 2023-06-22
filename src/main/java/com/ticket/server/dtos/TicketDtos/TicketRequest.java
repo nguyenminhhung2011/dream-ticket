@@ -1,6 +1,9 @@
 package com.ticket.server.dtos.TicketDtos;
 
 import com.ticket.server.enums.Gender;
+import com.ticket.server.enums.TicketType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -8,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TicketRequest {
     private String name;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String phoneNumber;
     private String emailAddress;
@@ -15,6 +19,6 @@ public class TicketRequest {
     private Long dob;
     private Long timeBought;
     private int ticketType;
-    private String seat;
+    private int seat;
 }
 

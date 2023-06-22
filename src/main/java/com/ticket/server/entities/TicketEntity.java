@@ -33,7 +33,7 @@ public class TicketEntity {
     private String emailAddress;
 
     @Column(nullable = false)
-    private String seat;
+    private int seat;
 
     @Column(nullable = false)
     private Double luggage;
@@ -56,6 +56,7 @@ public class TicketEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
+
 
     //    @ManyToOne
     //    @JoinColumn(name = "flight_id")

@@ -1,5 +1,6 @@
 package com.ticket.server.service.IService;
 
+import com.ticket.server.dtos.Payment.PaymentDto;
 import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.dtos.TicketDtos.TicketFilterRequest;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ITicketService {
-    boolean addTicket(AddTicketRequest request) throws Exception;
+    PaymentDto addTicket(AddTicketRequest request) ;
 
     TicketDto getTicket(Long id) throws Exception;
 
@@ -23,7 +24,7 @@ public interface ITicketService {
 
     void deleteTicket(Long id);
 
-    TicketDto updateTicket(Long id, TicketRequest request) throws Exception;
+    TicketDto updateTicket(Long id, TicketRequest request);
 
     GetListDataResponse<TicketDto> getTicketByPage(int page, int perPage);
 

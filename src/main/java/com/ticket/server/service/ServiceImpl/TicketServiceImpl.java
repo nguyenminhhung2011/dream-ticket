@@ -1,5 +1,6 @@
 package com.ticket.server.service.ServiceImpl;
 
+import com.ticket.server.dtos.Payment.PaymentDto;
 import com.ticket.server.dtos.TicketDtos.AddTicketRequest;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.dtos.TicketDtos.TicketFilterRequest;
@@ -7,33 +8,20 @@ import com.ticket.server.dtos.TicketDtos.TicketRequest;
 import com.ticket.server.entities.*;
 import com.ticket.server.enums.PaymentStatus;
 import com.ticket.server.enums.PaymentType;
-import com.ticket.server.model.GetListDataRequest;
 import com.ticket.server.model.GetListDataResponse;
-import com.ticket.server.model.Ticket;
-import com.ticket.server.repository.FlightRepository;
-import com.ticket.server.repository.PaymentRepository;
-import com.ticket.server.repository.TicketInformationRepository;
-import com.ticket.server.repository.TicketRepository;
+import com.ticket.server.repository.*;
 import com.ticket.server.service.IService.ITicketService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.annotations.NotFoundAction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
-import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -43,38 +31,39 @@ public class TicketServiceImpl implements ITicketService {
     private final FlightRepository flightRepository;
     private final TicketInformationRepository  ticketInfoRepository;
     private final PaymentRepository paymentRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
-    public boolean addTicket(AddTicketRequest request) throws Exception {
-        final Optional<Flight> flightOptional = flightRepository.findById(request.getFlightId());
+    public PaymentDto addTicket(AddTicketRequest request)  {
+        final Optional<CustomerEntity> optionalCustomerEntity = customerRepository.findById(request.getCustomerId());
+        final Optional<Flight> optionalFlight = flightRepository.findById(request.getFlightId());
 
-        if (flightOptional.isEmpty()){
-            throw new Exception("Can not found any flight have id " + request.getFlightId());
+        if (optionalCustomerEntity.isEmpty()){
+            throw new RuntimeException("Can not found any customer have id " + request.getCustomerId());
         }
 
-        final Flight flight = flightOptional.get();
+        if (optionalFlight.isEmpty()){
+            throw new RuntimeException("Can not found any flight have id " + request.getFlightId());
+        }
+
+        final CustomerEntity customer = optionalCustomerEntity.get();
+        final Flight flight = optionalFlight.get();
 
         final List<TicketEntity> ticketEntities = new ArrayList<>();
 
-//        PaymentEntity paymentEntity = PaymentEntity
-//                .builder()
-//                .createdDate(Date.from(Instant.now()).getTime())
-//                .paymentType(request.getPaymentType())
-//                .build();
-
-//        paymentRepository.save(paymentEntity);
+        AtomicReference<Double> total = new AtomicReference<>(0.0);
 
         request.getTickets().forEach(ticketRequest -> {
             final Optional<TicketInformationEntity> optionalTicketInfoEntity =  ticketInfoRepository
-                    .findById(new TicketInformationEntityId(ticketRequest.getTicketType(),flight));
+                    .findByFlightAndType(request.getFlightId(),ticketRequest.getTicketType());
 
             if (optionalTicketInfoEntity.isEmpty()){
-                try {
-                    throw new Exception("Can not found any flight have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getTicketType());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                throw new RuntimeException("Can not found any flight have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getTicketType());
             }
+
+            final TicketInformationEntity ticketInformationEntity = optionalTicketInfoEntity.get();
+
+            total.updateAndGet(v -> v + ticketInformationEntity.getPrice());
 
             final TicketEntity ticketEntity = TicketEntity
                     .builder()
@@ -87,16 +76,27 @@ public class TicketServiceImpl implements ITicketService {
                     .phoneNumber(ticketRequest.getPhoneNumber())
                     .luggage(ticketRequest.getLuggage())
                     .ticketInformation(optionalTicketInfoEntity.get())
-//                    .flight(flight)
+                    .customer(customer)
+                    .ticketInformation(ticketInformationEntity)
                     .build();
 
             ticketEntities.add(ticketEntity);
         });
-//        paymentEntity.setCustomers(CustomerEntity.builder().na.build());
+        ticketRepository.saveAll(ticketEntities);
 
-        final List<TicketEntity> result =  ticketRepository.saveAll(ticketEntities);
+        PaymentEntity paymentEntity = PaymentEntity
+                .builder()
+                .createdDate(Date.from(Instant.now()).getTime())
+                .total(total.get())
+                .status(PaymentStatus.PENDING)
+                .customers(customer)
+                .flight(flight)
+//                .ticket(ticketEntities)
+                .build();
 
-        return true;
+        final PaymentEntity savedPayment = paymentRepository.save(paymentEntity);
+
+        return PaymentDto.fromEntity(savedPayment);
     }
     @Override
     public TicketDto getTicket(Long id) throws Exception {
@@ -120,10 +120,10 @@ public class TicketServiceImpl implements ITicketService {
     }
 
     @Override
-    public TicketDto updateTicket(Long id, TicketRequest request) throws Exception {
+    public TicketDto updateTicket(Long id, TicketRequest request) {
 
         if (!ticketRepository.existsById(id)){
-            throw new Exception("Can not found ticket entry corresponding");
+            throw new RuntimeException("Can not found ticket entry corresponding");
         }
 
         final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);

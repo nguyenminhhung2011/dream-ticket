@@ -75,8 +75,6 @@ public class TicketController {
         }
     }
 
-
-
 //    @GetMapping("/get")
 //    public ResponseEntity<?> getListTicket(@RequestBody GetListDataRequest request){
 //        try {

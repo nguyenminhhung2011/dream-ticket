@@ -24,11 +24,11 @@ public class JwtService {
 //    private final Date expiredRefreshToken =new Date(System.currentTimeMillis()+ 1000*60*48);
 
     private Date expiredAccessToken(){
-        return new Date(System.currentTimeMillis()+ 1000*60*24);
+        return new Date(System.currentTimeMillis()+ 1000*60*1000);
     }
 
     private Date expiredRefreshToken(){
-        return new Date(System.currentTimeMillis()+ 1000*60*48);
+        return new Date(System.currentTimeMillis()+ 1000*60*1200);
     }
     public String extractUsername(String token){
         return extractClaims(token,Claims::getSubject);

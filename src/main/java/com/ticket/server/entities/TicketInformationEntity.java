@@ -25,6 +25,7 @@ public class TicketInformationEntity {
 
     @Column(nullable = false)
     private int seatPosition;
+
     @Column(nullable = false)
     private String seatHeader;
 }
