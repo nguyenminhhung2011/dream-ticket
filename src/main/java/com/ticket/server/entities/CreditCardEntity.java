@@ -12,6 +12,7 @@ public class CreditCardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String creditNum;
     private Long expiredDate;
     private String cvc;

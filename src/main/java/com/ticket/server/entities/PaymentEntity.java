@@ -19,6 +19,7 @@ public class PaymentEntity {
     private Long id;
 
     private Long createdDate;
+
     private Double total;
 
     @Enumerated(EnumType.STRING)
@@ -31,6 +32,14 @@ public class PaymentEntity {
     @JoinColumn(name = "customer_id")
     private CustomerEntity customers;
 
+    @ManyToOne
+    @JoinColumn(name =  "flight_id")
+    private Flight flight;
+
     @OneToMany
+    @JoinColumns(value = {
+            @JoinColumn(name = "customer_id", referencedColumnName = "customer_id"),
+            @JoinColumn(name = "flight_id", referencedColumnName = "flight_id")
+    })
     private List<TicketEntity> ticket;
 }

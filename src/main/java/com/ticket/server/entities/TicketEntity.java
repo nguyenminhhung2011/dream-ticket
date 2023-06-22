@@ -15,7 +15,6 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TicketEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,19 +45,25 @@ public class TicketEntity {
     private Date timeBought;
 
     @ManyToOne
-    @JoinColumns(value = {
-            @JoinColumn(name = "flight", referencedColumnName = "flight_id"),
+    @JoinColumns(
+        value = {
+            @JoinColumn(name = "flight_id", referencedColumnName = "flight_id"),
             @JoinColumn(name = "type", referencedColumnName = "ticket_type")
-    })
+        }
+    )
     private TicketInformationEntity ticketInformation;
 
     @ManyToOne
-    @JoinColumn(name = "flight_id")
-    private Flight flight;
+    @JoinColumn(name = "customer_id")
+    private CustomerEntity customer;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private PaymentEntity payment;
+    //    @ManyToOne
+    //    @JoinColumn(name = "flight_id")
+    //    private Flight flight;
+    //
+    //    @ManyToOne
+    //    @JoinColumn(name = "payment_id")
+    //    private PaymentEntity payment;
 
 }
 

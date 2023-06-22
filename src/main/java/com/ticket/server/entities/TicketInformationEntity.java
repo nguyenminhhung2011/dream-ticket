@@ -27,8 +27,5 @@ public class TicketInformationEntity {
     private int seatPosition;
     @Column(nullable = false)
     private String seatHeader;
-
-    @OneToMany()
-    private List<TicketEntity> tickets;
 }
 

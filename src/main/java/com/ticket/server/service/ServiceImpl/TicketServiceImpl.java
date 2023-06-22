@@ -56,13 +56,13 @@ public class TicketServiceImpl implements ITicketService {
 
         final List<TicketEntity> ticketEntities = new ArrayList<>();
 
-        PaymentEntity paymentEntity = PaymentEntity
-                .builder()
-                .createdDate(Date.from(Instant.now()).getTime())
-                .paymentType(request.getPaymentType())
-                .build();
+//        PaymentEntity paymentEntity = PaymentEntity
+//                .builder()
+//                .createdDate(Date.from(Instant.now()).getTime())
+//                .paymentType(request.getPaymentType())
+//                .build();
 
-        paymentRepository.save(paymentEntity);
+//        paymentRepository.save(paymentEntity);
 
         request.getTickets().forEach(ticketRequest -> {
             final Optional<TicketInformationEntity> optionalTicketInfoEntity =  ticketInfoRepository
@@ -87,8 +87,7 @@ public class TicketServiceImpl implements ITicketService {
                     .phoneNumber(ticketRequest.getPhoneNumber())
                     .luggage(ticketRequest.getLuggage())
                     .ticketInformation(optionalTicketInfoEntity.get())
-                    .flight(flight)
-                    .payment(paymentEntity)
+//                    .flight(flight)
                     .build();
 
             ticketEntities.add(ticketEntity);
@@ -134,8 +133,8 @@ public class TicketServiceImpl implements ITicketService {
                 TicketEntity
                         .builder()
                         .id(ticketEntity.getId())
-                        .payment(ticketEntity.getPayment())
-                        .flight(ticketEntity.getFlight())
+//                        .payment(ticketEntity.getPayment())
+//                        .flight(ticketEntity.getFlight())
                         .ticketInformation(ticketEntity.getTicketInformation())
                         .name(request.getName())
                         .gender(request.getGender())
