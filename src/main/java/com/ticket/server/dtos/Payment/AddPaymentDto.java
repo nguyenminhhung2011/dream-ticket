@@ -1,5 +1,7 @@
 package com.ticket.server.dtos.Payment;
 
+import com.ticket.server.dtos.CustomerDtos.CustomerRawDto;
+import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.entities.CustomerEntity;
 import com.ticket.server.entities.TicketEntity;
 import com.ticket.server.enums.PaymentStatus;
@@ -18,6 +20,6 @@ public class AddPaymentDto {
     private Double total;
     private PaymentStatus status;
     private PaymentType paymentType;
-    private CustomerEntity customers;
-    private List<TicketEntity> ticket;
+    private String customerId;
+    private String flightId;
 }

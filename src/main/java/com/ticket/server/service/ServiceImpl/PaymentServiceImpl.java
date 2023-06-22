@@ -91,10 +91,10 @@ public class PaymentServiceImpl implements IPaymentService {
                         .id(paymentDto.getId())
                         .status(newPaymentDti.getStatus())
                         .paymentType(newPaymentDti.getPaymentType())
-                        .customers(newPaymentDti.getCustomers())
+//                        .customers(newPaymentDti.getCustomers())
                         .total(newPaymentDti.getTotal())
                         .createdDate(newPaymentDti.getCreatedDate())
-                        .ticket(newPaymentDti.getTicket())
+//                        .ticket(newPaymentDti.getTicket())
                         .build()
             );
 

@@ -15,7 +15,8 @@ public class TicketDto {
     private String gender;
     private String phoneNumber;
     private String emailAddress;
-    private String seat;
+    private int seat;
+    private double price;
     private double luggage;
     private long birthday;
     private long timeBought;
@@ -29,6 +30,7 @@ public class TicketDto {
                 .emailAddress(entity.getEmailAddress())
                 .gender(entity.getGender().toString())
                 .seat(entity.getSeat())
+                .price(entity.getTicketInformation().getPrice())
                 .timeBought(entity.getTimeBought().getTime())
                 .phoneNumber(entity.getPhoneNumber())
                 .luggage(entity.getLuggage())

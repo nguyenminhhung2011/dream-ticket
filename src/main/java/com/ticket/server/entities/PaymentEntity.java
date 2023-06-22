@@ -36,10 +36,10 @@ public class PaymentEntity {
     @JoinColumn(name =  "flight_id")
     private Flight flight;
 
-    @OneToMany
+    @ManyToMany
     @JoinColumns(value = {
-            @JoinColumn(name = "customer_id", referencedColumnName = "customer_id"),
-            @JoinColumn(name = "flight_id", referencedColumnName = "flight_id")
+            @JoinColumn(name = "customer_id",referencedColumnName = "customer_id"),
+            @JoinColumn(name = "flight_id",referencedColumnName = "flight_id")
     })
     private List<TicketEntity> ticket;
 }

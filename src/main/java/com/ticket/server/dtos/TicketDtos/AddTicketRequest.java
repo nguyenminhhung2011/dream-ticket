@@ -12,7 +12,7 @@ import java.util.List;
 public class AddTicketRequest {
     final List<TicketRequest> tickets;
     final Long flightId;
-    final PaymentType paymentType;
+    final Long customerId;
 }
 
 
