@@ -1,4 +1,4 @@
-package com.ticket.server.service;
+package com.ticket.server.service.IService;
 
 import com.ticket.server.entities.Airline;
 

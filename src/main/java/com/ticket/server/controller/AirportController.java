@@ -5,7 +5,7 @@ import com.ticket.server.dtos.AirportDtos.AirportDto;
 import com.ticket.server.dtos.AirportDtos.EditAirportDto;
 import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Airport;
-import com.ticket.server.service.IAirportService;
+import com.ticket.server.service.IService.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -90,6 +90,8 @@ public class AirportController {
     public void deleteAirport(@PathVariable Long id){
         airportService.deleteAirport(id);
     }
+
+
 
     private ResponseStatusException throwNotFoundException(){
         return new ResponseStatusException(HttpStatus.NOT_FOUND);

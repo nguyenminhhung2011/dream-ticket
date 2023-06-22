@@ -1,12 +1,11 @@
-package com.ticket.server.service.impl;
+package com.ticket.server.service.ServiceImpl;
 
 import com.ticket.server.entities.Airport;
 import com.ticket.server.repository.AirportRepository;
-import com.ticket.server.service.IAirportService;
+import com.ticket.server.service.IService.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
@@ -53,14 +52,7 @@ public class AirportServicesImpl implements IAirportService {
     }
 
     @Override
-    public void deleteAirport(Long id) {
-        try {
-            airportRepository.deleteById(id);
-        }
-        catch (Exception e){
-            // do nothing
-        }
-    }
+    public void deleteAirport(Long id) {airportRepository.deleteById(id);}
 
     @Override
     public Optional<Airport> updateAirport(Airport airport, Long id) {

@@ -1,21 +1,16 @@
 package com.ticket.server.controller;
 
-import com.ticket.server.dtos.AirportDtos.AirportDto;
 import com.ticket.server.dtos.FlightDtos.AddFlightDto;
 import com.ticket.server.dtos.FlightDtos.EditFlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Flight;
-import com.ticket.server.service.IFlightService;
-import org.hibernate.Internal;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ticket.server.service.IService.IFlightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +19,7 @@ import java.util.stream.Collectors;
 public class FlightController {
     private final IFlightService flightService;
 
-    public FlightController(@Autowired IFlightService flightService) {
+    public FlightController( IFlightService flightService) {
         this.flightService = flightService;
     }
 

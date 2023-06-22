@@ -1,6 +1,5 @@
 package com.ticket.server.service;
 
-import com.ticket.server.data.UserCredentials;
 import com.ticket.server.model.Employee;
 import com.ticket.server.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +34,6 @@ public class EmployeeService {
 
         Employee createdEmployee = employeeRepository.save(employee);
         return ResponseEntity.created(URI.create("/employee/" + createdEmployee.getId())).body(createdEmployee);
-    }
-
-    public ResponseEntity<Employee> login(UserCredentials credentials) {
-        Optional<Employee> optionalEmployee = employeeRepository.findByAccount(credentials.getUsername());
-        if(optionalEmployee.isPresent()){
-            Employee employee = optionalEmployee.get();
-
-            // Check if the provided password matches the hashed password stored in the database
-            if(passwordEncoder.matches(credentials.getPassword(), employee.getPassword())) {
-                return ResponseEntity.ok().body(employee);
-            }
-        }
-
-        return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<Employee> getEmployee(Long id){

@@ -34,6 +34,8 @@ public class Flight {
     @OneToMany(mappedBy = "flight")
     private List<StopAirport> stops;
 
+
+
     public Long getId() {
         return id;
     }
@@ -90,6 +92,18 @@ public class Flight {
         this.stops = stops;
     }
 
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "id=" + id +
+                ", departureAirport=" + departureAirport +
+                ", arrivalAirport=" + arrivalAirport +
+                ", airline=" + airline +
+                ", departureTime=" + departureTime +
+                ", arrivalTime=" + arrivalTime +
+                ", stops=" + stops +
+                '}';
+    }
 
     public Flight() {
     }

@@ -1,8 +1,8 @@
-package com.ticket.server.service.impl;
+package com.ticket.server.service.ServiceImpl;
 
 import com.ticket.server.entities.Airline;
 import com.ticket.server.repository.AirlineRepository;
-import com.ticket.server.service.IAirlineService;
+import com.ticket.server.service.IService.IAirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

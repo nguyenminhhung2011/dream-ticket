@@ -1,8 +1,7 @@
 package com.ticket.server.controller;
 
 import com.ticket.server.dtos.Airline.AirlineDto;
-import com.ticket.server.dtos.AirportDtos.AirportDto;
-import com.ticket.server.service.IAirlineService;
+import com.ticket.server.service.IService.IAirlineService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
