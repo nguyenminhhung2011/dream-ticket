@@ -53,6 +53,18 @@ public class TicketServiceImpl implements ITicketService {
 
         AtomicReference<Double> total = new AtomicReference<>(0.0);
 
+        PaymentEntity paymentEntity = PaymentEntity
+                .builder()
+                .createdDate(Date.from(Instant.now()).getTime())
+                .total(total.get())
+                .status(PaymentStatus.PENDING)
+                .customers(customer)
+                .flight(flight)
+//                .ticket(ticketEntities)
+                .build();
+
+        final PaymentEntity savedPayment = paymentRepository.save(paymentEntity);
+
         request.getTickets().forEach(ticketRequest -> {
             final Optional<TicketInformationEntity> optionalTicketInfoEntity =  ticketInfoRepository
                     .findByFlightAndType(request.getFlightId(),ticketRequest.getTicketType());
@@ -64,6 +76,7 @@ public class TicketServiceImpl implements ITicketService {
             final TicketInformationEntity ticketInformationEntity = optionalTicketInfoEntity.get();
 
             total.updateAndGet(v -> v + ticketInformationEntity.getPrice());
+
 
             final TicketEntity ticketEntity = TicketEntity
                     .builder()
@@ -77,24 +90,16 @@ public class TicketServiceImpl implements ITicketService {
                     .luggage(ticketRequest.getLuggage())
                     .ticketInformation(optionalTicketInfoEntity.get())
                     .customer(customer)
+                    .payment(savedPayment)
                     .ticketInformation(ticketInformationEntity)
                     .build();
 
             ticketEntities.add(ticketEntity);
         });
-        ticketRepository.saveAll(ticketEntities);
 
-        PaymentEntity paymentEntity = PaymentEntity
-                .builder()
-                .createdDate(Date.from(Instant.now()).getTime())
-                .total(total.get())
-                .status(PaymentStatus.PENDING)
-                .customers(customer)
-                .flight(flight)
-//                .ticket(ticketEntities)
-                .build();
+        final List<TicketEntity> tickets = ticketRepository.saveAll(ticketEntities);
 
-        final PaymentEntity savedPayment = paymentRepository.save(paymentEntity);
+        savedPayment.setTicket(tickets);
 
         return PaymentDto.fromEntity(savedPayment);
     }
