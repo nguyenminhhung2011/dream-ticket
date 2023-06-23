@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface FlightRepository extends JpaRepository<Flight, Long> {
@@ -54,7 +55,11 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
             """, nativeQuery = true)
     List<Flight> getFlightDepartureId(Integer id);
 
-
+    @Query(value = """
+            select count(*) from flight f
+           where DATEDIFF(f.departure_time,:date)  = 0;
+            """, nativeQuery = true
+    )
+    long countFlightByDate(Date date);
 }
 
-//            LIMIT ?4 OFFSET ?5,

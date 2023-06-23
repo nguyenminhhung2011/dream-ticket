@@ -1,18 +1,26 @@
 package com.ticket.server.repository;
 
-import com.ticket.server.dtos.Payment.PaymentFilter;
 import com.ticket.server.entities.PaymentEntity;
-import com.ticket.server.enums.PaymentStatus;
-import com.ticket.server.enums.PaymentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
+
+    @Query(
+            value = """
+                select* from payment_entity pa
+                where datediff(pa.created_date ,:time) = 0
+            """
+            ,nativeQuery = true
+    )
+    List<PaymentEntity> findByCreatedDate(Date time);
+
     @Query(value = """
             SELECT p.*
             FROM payment_entity AS p
@@ -21,6 +29,7 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             AND p.created_date = :createDate
             LIMIT :limit OFFSET :offset
     """, nativeQuery = true )
+
     List<PaymentEntity> filterPayment(
             int offset,
             long limit,
@@ -28,6 +37,8 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             String paymentStatus,
             String paymentType
     );
+
+
 
     @Query(
             value = """
@@ -38,5 +49,24 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             """
             ,nativeQuery = true
     )
-    Optional<PaymentEntity> getPaymentByCusomterIdAndLatestCreateDate(long id);
+    Optional<PaymentEntity> getPaymentByCustomerIdAndLatestCreateDate(long id);
+
+    @Query(
+            value = """
+            select * from payment_entity pa
+            where pa.customer_id = :id
+            """,
+            nativeQuery = true
+    )
+    List<PaymentEntity> findByCustomerId(long id);
+
+
+    @Query(
+            value = """
+               select count(distinct pa.customer_id)
+               from payment_entity pa
+               where pa.created_date = :time
+            """
+            ,nativeQuery = true)
+    long countCustomerByDate(Date time);
 }

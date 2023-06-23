@@ -1,19 +1,19 @@
 package com.ticket.server.service.IService;
 
-import com.ticket.server.dtos.Payment.AddPaymentDto;
-import com.ticket.server.dtos.Payment.PaymentDto;
-import com.ticket.server.dtos.Payment.PaymentFilter;
-import com.ticket.server.enums.PaymentStatus;
-import org.springframework.http.ResponseEntity;
+import com.ticket.server.dtos.Payment.*;
+import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentManagementPageDto;
+import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentNoCustomerDto;
 
 import java.util.List;
 
 public interface IPaymentService {
-    public List<PaymentDto> fetchPaymentData();
+    List<PaymentDto> fetchPaymentData();
 
-    public PaymentDto getLatestPaymentByCustomerId(long id);
+    PaymentDto getLatestPaymentByCustomerId(long id);
 
-    public List<PaymentDto> searchPaymentItem(String keyword);
+    List<PaymentDto> searchPaymentItem(String keyword);
+
+    public List<PaymentNoCustomerDto> getPaymentByCustomerId(long id);
 
     public List<PaymentDto> filterPaymentList(PaymentFilter paymentFilter);
 
@@ -24,4 +24,7 @@ public interface IPaymentService {
     public PaymentDto updatePayment(long id, AddPaymentDto status);
     public boolean deletePayment(long id);
 
+    public PaymentManagementPageDto fetchPaymentManagementPage();
+
+    public List<PaymentDto> fetchAllPaymentByCreatedDate(long createdDate);
 }
