@@ -6,9 +6,6 @@ import com.ticket.server.entities.CustomerEntity;
 import com.ticket.server.repository.CustomerRepository;
 import com.ticket.server.service.IService.ICustomerService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,7 +64,7 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public boolean updateNewCustomer(CustomerRawDto customer) {
+    public CustomerEntity updateNewCustomer(CustomerRawDto customer) {
         final Optional<CustomerEntity> customerEntity = customerRepository.findById(customer.getId());
         if (customerEntity.isPresent()){
             final CustomerEntity oldCustomer = customerEntity.get();
@@ -84,8 +81,7 @@ public class CustomerService implements ICustomerService {
                     .identifyNum(customer.getIdentifyNum())
                     .build();
 
-            customerRepository.save(newCustomer);
-            return true;
+            return customerRepository.save(newCustomer);
         }else{
             throw new RuntimeException("Can not found any customer corresponding");
         }
