@@ -47,11 +47,20 @@ public class PaymentController{
 
         return response;
     }
+    @GetMapping("/getByCustomer")
+    public ResponseEntity<?> getPaymentByPage(@RequestParam long id){
+        return ResponseEntity.ok(paymentService.getPaymentByCustomerId(id));
+    }
 
     @GetMapping("/getLatest")
     public ResponseEntity<?> getPaymentByCustomerIdAndLatestCreatedDate(@RequestParam long id){
         final PaymentDto paymentDto = paymentService.getLatestPaymentByCustomerId(id);
         return ResponseEntity.ok(paymentDto);
+    }
+
+    @GetMapping("/fetchManagementPage")
+    public ResponseEntity<?> fetchPaymentManagementPage(){
+        return ResponseEntity.ok(paymentService.fetchPaymentManagementPage());
     }
 
     @PutMapping("/update")
@@ -62,7 +71,6 @@ public class PaymentController{
 
         return ResponseEntity.ok(responseMap);
     }
-
     @DeleteMapping("/delete")
     public ResponseEntity<?> deletePayment(@RequestParam long id){
         Map<String,Object> responseMap = new HashMap<>();

@@ -6,6 +6,7 @@ import com.ticket.server.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Data
@@ -18,7 +19,7 @@ public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long createdDate;
+    private Date createdDate;
 
     private Double total;
 

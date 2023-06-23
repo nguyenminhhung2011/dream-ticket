@@ -56,7 +56,7 @@ public class TicketServiceImpl implements ITicketService {
 
         PaymentEntity paymentEntity = PaymentEntity
                 .builder()
-                .createdDate(Date.from(Instant.now()).getTime())
+                .createdDate(new java.sql.Date(Instant.now().toEpochMilli()))
                 .total(total.get())
                 .status(PaymentStatus.PENDING)
                 .paymentType(PaymentType.CARD)
@@ -77,7 +77,6 @@ public class TicketServiceImpl implements ITicketService {
             final TicketInformationEntity ticketInformationEntity = optionalTicketInfoEntity.get();
 
             total.updateAndGet(v -> v + ticketInformationEntity.getPrice());
-
 
             final TicketEntity ticketEntity = TicketEntity
                     .builder()
@@ -105,7 +104,6 @@ public class TicketServiceImpl implements ITicketService {
         return PaymentDto.fromEntity(savedPayment);
     }
 
-
     @Override
     public TicketDto getTicket(Long id){
         final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);
@@ -121,7 +119,6 @@ public class TicketServiceImpl implements ITicketService {
     public List<TicketDto> getAllTicket() {
         return ticketRepository.findAll().stream().map(TicketDto::fromEntity).toList();
     }
-
 
     @Override
     public void deleteTicket(Long id) {
