@@ -153,7 +153,7 @@ public class PaymentServiceImpl implements IPaymentService {
 
         return PaymentManagementPageDto
                 .builder()
-                .payments(paymentsToday)
+                .payments(paymentsToday.stream().map(PaymentNoTicketCustomerDto::fromPaymentDto).toList())
                 .revenue(revenue)
                 .statusData(paymentStatusStateData)
                 .ticketTierData(ticketTierData)

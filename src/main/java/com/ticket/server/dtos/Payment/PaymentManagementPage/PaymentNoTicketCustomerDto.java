@@ -20,6 +20,7 @@ public class PaymentNoTicketCustomerDto {
     private Double total;
     private PaymentStatus paymentStatus;
     private PaymentType paymentType;
+    private CustomerRawDto customers;
 
     public static PaymentNoTicketCustomerDto fromEntity(PaymentEntity paymentEntity){
         return PaymentNoTicketCustomerDto
@@ -29,6 +30,19 @@ public class PaymentNoTicketCustomerDto {
                 .paymentStatus(paymentEntity.getStatus())
                 .total(paymentEntity.getTotal())
                 .paymentType(paymentEntity.getPaymentType())
+                .customers(CustomerRawDto.fromEntity(paymentEntity.getCustomers()))
+                .build();
+    }
+
+    public static PaymentNoTicketCustomerDto fromPaymentDto(PaymentDto paymentDto){
+        return PaymentNoTicketCustomerDto
+                .builder()
+                .id(paymentDto.getId())
+                .createdDate(paymentDto.getCreatedDate())
+                .paymentStatus(paymentDto.getPaymentStatus())
+                .total(paymentDto.getTotal())
+                .paymentType(paymentDto.getPaymentType())
+                .customers(paymentDto.getCustomers())
                 .build();
     }
 
