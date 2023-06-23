@@ -5,6 +5,7 @@ import com.ticket.server.dtos.Payment.PaymentDto;
 import com.ticket.server.dtos.Payment.PaymentFilter;
 import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.enums.PaymentStatus;
+import com.ticket.server.exceptions.NotFoundException;
 import com.ticket.server.repository.PaymentRepository;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,17 @@ public class PaymentServiceImpl implements IPaymentService {
                 .stream()
                 .map(PaymentDto::fromEntity)
                 .toList();
+    }
+
+    @Override
+    public PaymentDto getLatestPaymentByCustomerId(long id) {
+        Optional<PaymentEntity> paymentEntityOptional = paymentRepository.getPaymentByCusomterIdAndLatestCreateDate(id);
+
+        if (paymentEntityOptional.isPresent()){
+            return PaymentDto.fromEntity(paymentEntityOptional.get());
+        }
+
+        throw new NotFoundException("Can not found any valid payment");
     }
 
     @Override

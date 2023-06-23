@@ -19,11 +19,7 @@ public class TicketController {
 
     @PostMapping("/book_ticket")
     public ResponseEntity<?> addTicket(@RequestBody AddTicketRequest request){
-        try {
-            return ResponseEntity.ok(ticketService.addTicket(request));
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
+        return ResponseEntity.ok(ticketService.addTicket(request));
     }
 
     @GetMapping("/{id}")

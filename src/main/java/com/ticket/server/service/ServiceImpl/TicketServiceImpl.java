@@ -8,6 +8,7 @@ import com.ticket.server.dtos.TicketDtos.TicketRequest;
 import com.ticket.server.entities.*;
 import com.ticket.server.enums.PaymentStatus;
 import com.ticket.server.enums.PaymentType;
+import com.ticket.server.exceptions.NotFoundException;
 import com.ticket.server.model.GetListDataResponse;
 import com.ticket.server.repository.*;
 import com.ticket.server.service.IService.ITicketService;
@@ -39,11 +40,11 @@ public class TicketServiceImpl implements ITicketService {
         final Optional<Flight> optionalFlight = flightRepository.findById(request.getFlightId());
 
         if (optionalCustomerEntity.isEmpty()){
-            throw new RuntimeException("Can not found any customer have id " + request.getCustomerId());
+            throw new NotFoundException("Can not found any customer have id " + request.getCustomerId());
         }
 
         if (optionalFlight.isEmpty()){
-            throw new RuntimeException("Can not found any flight have id " + request.getFlightId());
+            throw new NotFoundException("Can not found any flight have id " + request.getFlightId());
         }
 
         final CustomerEntity customer = optionalCustomerEntity.get();
@@ -58,9 +59,9 @@ public class TicketServiceImpl implements ITicketService {
                 .createdDate(Date.from(Instant.now()).getTime())
                 .total(total.get())
                 .status(PaymentStatus.PENDING)
+                .paymentType(PaymentType.CARD)
                 .customers(customer)
                 .flight(flight)
-//                .ticket(ticketEntities)
                 .build();
 
         final PaymentEntity savedPayment = paymentRepository.save(paymentEntity);
@@ -70,7 +71,7 @@ public class TicketServiceImpl implements ITicketService {
                     .findByFlightAndType(request.getFlightId(),ticketRequest.getTicketType());
 
             if (optionalTicketInfoEntity.isEmpty()){
-                throw new RuntimeException("Can not found any flight have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getTicketType());
+                throw new NotFoundException("Can not found any ticket information have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getTicketType());
             }
 
             final TicketInformationEntity ticketInformationEntity = optionalTicketInfoEntity.get();
@@ -103,14 +104,16 @@ public class TicketServiceImpl implements ITicketService {
 
         return PaymentDto.fromEntity(savedPayment);
     }
+
+
     @Override
-    public TicketDto getTicket(Long id) throws Exception {
+    public TicketDto getTicket(Long id){
         final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);
         if (optionalTicketEntity.isPresent()){
             return TicketDto.fromEntity(optionalTicketEntity.get());
         }
         else{
-            throw new Exception("Can not found ticket corresponding");
+            throw new NotFoundException("Can not found ticket corresponding");
         }
     }
 
@@ -118,6 +121,7 @@ public class TicketServiceImpl implements ITicketService {
     public List<TicketDto> getAllTicket() {
         return ticketRepository.findAll().stream().map(TicketDto::fromEntity).toList();
     }
+
 
     @Override
     public void deleteTicket(Long id) {
@@ -128,7 +132,7 @@ public class TicketServiceImpl implements ITicketService {
     public TicketDto updateTicket(Long id, TicketRequest request) {
 
         if (!ticketRepository.existsById(id)){
-            throw new RuntimeException("Can not found ticket entry corresponding");
+            throw new NotFoundException("Can not found ticket entry corresponding");
         }
 
         final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);

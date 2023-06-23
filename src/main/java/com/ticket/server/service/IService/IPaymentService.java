@@ -11,6 +11,8 @@ import java.util.List;
 public interface IPaymentService {
     public List<PaymentDto> fetchPaymentData();
 
+    public PaymentDto getLatestPaymentByCustomerId(long id);
+
     public List<PaymentDto> searchPaymentItem(String keyword);
 
     public List<PaymentDto> filterPaymentList(PaymentFilter paymentFilter);
