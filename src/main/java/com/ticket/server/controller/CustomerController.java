@@ -20,7 +20,6 @@ import java.util.Map;
 public class CustomerController {
     private final ICustomerService customerService;
 
-
     @GetMapping("/all")
     public ResponseEntity<?> getALlCustomer(){
         try {
@@ -56,7 +55,8 @@ public class CustomerController {
     public ResponseEntity<?> addNewCustomer(@RequestBody AddCustomerRequest request){
         try {
             return ResponseEntity.ok(customerService.addNewCustomer(request));
-        }catch (Exception e){
+        }
+        catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }

@@ -5,16 +5,8 @@ import com.ticket.server.dtos.Payment.PaymentDto;
 import com.ticket.server.dtos.Payment.PaymentFilter;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.data.jpa.domain.AbstractAuditable_;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +17,6 @@ import java.util.Map;
 
 public class PaymentController{
     private final IPaymentService paymentService;
-
-    @ExceptionHandler(value = {RuntimeException.class})
-    ResponseEntity<?> handleException(Exception ex, WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
     @GetMapping("/all")
     public ResponseEntity<?> getPaymentService(){
         return ResponseEntity.ok(paymentService.fetchPaymentData());
@@ -55,11 +41,17 @@ public class PaymentController{
     public ResponseEntity<?> getPaymentById(@RequestParam long id){
         final PaymentDto paymentDto = paymentService.getPaymentById(id);
 
-        final ResponseEntity response = ResponseEntity.ok(paymentDto);
+        final ResponseEntity<PaymentDto> response = ResponseEntity.ok(paymentDto);
 
         System.out.println(response.getBody());
 
         return response;
+    }
+
+    @GetMapping("/getLatest")
+    public ResponseEntity<?> getPaymentByCustomerIdAndLatestCreatedDate(@RequestParam long id){
+        final PaymentDto paymentDto = paymentService.getLatestPaymentByCustomerId(id);
+        return ResponseEntity.ok(paymentDto);
     }
 
     @PutMapping("/update")

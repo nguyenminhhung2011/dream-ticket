@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
@@ -27,4 +28,15 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             String paymentStatus,
             String paymentType
     );
+
+    @Query(
+            value = """
+                select* from payment_entity pa
+                where pa.customer_id = :id
+                order by created_date
+                limit 1;
+            """
+            ,nativeQuery = true
+    )
+    Optional<PaymentEntity> getPaymentByCusomterIdAndLatestCreateDate(long id);
 }

@@ -22,6 +22,8 @@ public interface ITicketService {
 
     List<TicketDto> getAllTicket();
 
+
+
     void deleteTicket(Long id);
 
     TicketDto updateTicket(Long id, TicketRequest request);

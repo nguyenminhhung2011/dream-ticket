@@ -62,9 +62,10 @@ public class TicketEntity {
     //    @JoinColumn(name = "flight_id")
     //    private Flight flight;
     //
-    //    @ManyToOne
-    //    @JoinColumn(name = "payment_id")
-    //    private PaymentEntity payment;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private PaymentEntity payment;
 
 }
 
