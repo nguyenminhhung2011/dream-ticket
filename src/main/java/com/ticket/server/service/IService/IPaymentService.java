@@ -24,7 +24,7 @@ public interface IPaymentService {
     public PaymentDto updatePayment(long id, AddPaymentDto status);
     public boolean deletePayment(long id);
 
-    public PaymentManagementPageDto fetchPaymentManagementPage();
+    public PaymentManagementPageDto fetchPaymentManagementPage(int page,int perPage);
 
     public List<PaymentDto> fetchAllPaymentByCreatedDate(long createdDate);
 }

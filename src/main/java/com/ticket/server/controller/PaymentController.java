@@ -59,8 +59,8 @@ public class PaymentController{
     }
 
     @GetMapping("/fetchManagementPage")
-    public ResponseEntity<?> fetchPaymentManagementPage(){
-        return ResponseEntity.ok(paymentService.fetchPaymentManagementPage());
+    public ResponseEntity<?> fetchPaymentManagementPage(@RequestParam int page,@RequestParam int perPage){
+        return ResponseEntity.ok(paymentService.fetchPaymentManagementPage(page,perPage));
     }
 
     @PutMapping("/update")

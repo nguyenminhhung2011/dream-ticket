@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class TicketDto {
+
     private long id;
     private String name;
     private String gender;

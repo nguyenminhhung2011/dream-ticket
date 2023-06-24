@@ -108,6 +108,7 @@ public class TicketServiceImpl implements ITicketService {
     public TicketDto getTicket(Long id){
         final Optional<TicketEntity> optionalTicketEntity = ticketRepository.findById(id);
         if (optionalTicketEntity.isPresent()){
+            final TicketEntity ticketEntity = optionalTicketEntity.get();
             return TicketDto.fromEntity(optionalTicketEntity.get());
         }
         else{

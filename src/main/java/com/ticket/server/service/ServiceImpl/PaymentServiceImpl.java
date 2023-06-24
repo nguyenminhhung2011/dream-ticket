@@ -3,6 +3,7 @@ package com.ticket.server.service.ServiceImpl;
 import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.*;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
+import com.ticket.server.entities.Flight;
 import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.enums.PaymentStatus;
 import com.ticket.server.enums.PaymentType;
@@ -11,6 +12,7 @@ import com.ticket.server.repository.FlightRepository;
 import com.ticket.server.repository.PaymentRepository;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +54,7 @@ public class PaymentServiceImpl implements IPaymentService {
 
 
     @Override
-    public PaymentManagementPageDto fetchPaymentManagementPage(){
+    public PaymentManagementPageDto fetchPaymentManagementPage(int page,int perPage){
         final Date now = new Date(Instant.now().toEpochMilli());
 
         final List<PaymentDto> paymentsToday = fetchAllPaymentByCreatedDate(Instant.now().toEpochMilli());
@@ -153,7 +155,7 @@ public class PaymentServiceImpl implements IPaymentService {
 
         return PaymentManagementPageDto
                 .builder()
-                .payments(paymentsToday.stream().map(PaymentNoTicketCustomerDto::fromPaymentDto).toList())
+                .payments(getPaymentByPage(page,perPage).stream().map(PaymentNoTicketCustomerDto::fromPaymentDto).toList())
                 .revenue(revenue)
                 .statusData(paymentStatusStateData)
                 .ticketTierData(ticketTierData)
@@ -213,9 +215,8 @@ public class PaymentServiceImpl implements IPaymentService {
     public List<PaymentDto> getPaymentByPage(int page, int perPage) {
        try {
            PageRequest pageRequest = PageRequest.of(page, perPage);
-
            return paymentRepository
-                   .findAll(pageRequest)
+                   .findAll(pageRequest).getContent()
                    .stream()
                    .map(PaymentDto::fromEntity)
                    .toList();
