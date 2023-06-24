@@ -30,8 +30,7 @@ public class TicketController {
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
-
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<?> getAllTicket(){
         try {
             return ResponseEntity.ok(ticketService.getAllTicket());

@@ -17,7 +17,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Query(value =
             """
                 Select tic.* from ticket_entity as tic
-                where tic.flight_id = flightId
+                where tic.flight_id = :flightId;
             """
             , nativeQuery = true
     )
@@ -25,7 +25,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
     @Query(
     value = """
-        select count(*) from ticket_entity as tic
+        select count(*) from ticket_entity tic
         where tic.type = :ticketType
         and DATEDIFF(:date,tic.time_bought) = 0;
         """,nativeQuery = true)

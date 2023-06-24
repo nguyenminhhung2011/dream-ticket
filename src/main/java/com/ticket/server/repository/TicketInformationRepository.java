@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface TicketInformationRepository extends JpaRepository<TicketInformationEntity, TicketInformationEntityId> {
     @Query(value = """
                 select t.* from ticket_information t
-                where t.flight = :flight
+                where t.flight_id = :flight
             """,nativeQuery = true)
     List<TicketInformationEntity> findAllByFlight(Long flight);
     @Query(value = """
