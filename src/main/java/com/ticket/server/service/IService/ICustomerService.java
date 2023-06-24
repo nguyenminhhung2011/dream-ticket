@@ -12,6 +12,7 @@ public interface ICustomerService {
     CustomerRawDto getCustomerById(long id);
 
     List<CustomerRawDto> getCustomerByPage();
+    List<CustomerRawDto> searchCustomer(String keyword);
 
     CustomerRawDto addNewCustomer(AddCustomerRequest customer);
 

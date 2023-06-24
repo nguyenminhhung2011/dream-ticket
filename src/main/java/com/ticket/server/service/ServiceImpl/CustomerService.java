@@ -42,6 +42,11 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
+    public List<CustomerRawDto> searchCustomer(String keyword) {
+        return customerRepository.searchCustomer(keyword).stream().map(CustomerRawDto::fromEntity).toList();
+    }
+
+    @Override
     public CustomerRawDto addNewCustomer(AddCustomerRequest request) {
         try {
             final CustomerEntity customerEntity = CustomerEntity

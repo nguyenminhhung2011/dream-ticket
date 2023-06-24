@@ -23,8 +23,8 @@ public class TicketController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTicket(@PathVariable Long id){
-        try {
+     public ResponseEntity<?> getTicket(@PathVariable Long id){
+       try {
             return ResponseEntity.ok(ticketService.getTicket(id));
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
