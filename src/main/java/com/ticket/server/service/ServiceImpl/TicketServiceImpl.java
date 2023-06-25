@@ -59,7 +59,7 @@ public class TicketServiceImpl implements ITicketService {
                 .createdDate(new java.sql.Date(Instant.now().toEpochMilli()))
                 .total(total.get())
                 .status(PaymentStatus.PENDING)
-                .paymentType(PaymentType.CARD)
+                .paymentType(PaymentType.valueOf(request.getPaymentType()))
                 .customers(customer)
                 .flight(flight)
                 .build();

@@ -13,6 +13,8 @@ public class AddTicketRequest {
     final List<TicketRequest> tickets;
     final Long flightId;
     final Long customerId;
+
+    final String paymentType;
 }
 
 
