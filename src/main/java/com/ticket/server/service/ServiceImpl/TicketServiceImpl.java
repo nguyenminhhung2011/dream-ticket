@@ -82,7 +82,7 @@ public class TicketServiceImpl implements ITicketService {
                     .builder()
                     .name(ticketRequest.getName())
                     .gender(ticketRequest.getGender())
-                    .dob(Date.from(Instant.ofEpochMilli(ticketRequest.getDob())))
+                    .dob(Date.from(Instant.ofEpochMilli(ticketRequest.getBirthday())))
                     .emailAddress(ticketRequest.getEmailAddress())
                     .seat(ticketRequest.getSeat())
                     .timeBought(Date.from(Instant.now()))
@@ -150,7 +150,7 @@ public class TicketServiceImpl implements ITicketService {
                         .phoneNumber(request.getPhoneNumber())
                         .timeBought(Date.from(Instant.ofEpochMilli(request.getTimeBought())))
                         .emailAddress(request.getEmailAddress())
-                        .dob(Date.from(Instant.ofEpochMilli(request.getDob())))
+                        .dob(Date.from(Instant.ofEpochMilli(request.getBirthday())))
                         .build()
         );
 
