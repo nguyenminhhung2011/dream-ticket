@@ -2,6 +2,7 @@ package com.ticket.server.controller;
 
 import com.ticket.server.dtos.Payment.AddPaymentDto;
 import com.ticket.server.dtos.Payment.PaymentDto;
+import com.ticket.server.dtos.Payment.PaymentDtoDetail;
 import com.ticket.server.dtos.Payment.PaymentFilter;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,9 @@ public class PaymentController{
 
     @GetMapping("/get")
     public ResponseEntity<?> getPaymentById(@RequestParam long id){
-        final PaymentDto paymentDto = paymentService.getPaymentById(id);
+        final PaymentDtoDetail paymentDto = paymentService.getPaymentById(id);
 
-        final ResponseEntity<PaymentDto> response = ResponseEntity.ok(paymentDto);
+        final ResponseEntity<PaymentDtoDetail> response = ResponseEntity.ok(paymentDto);
 
         System.out.println(response.getBody());
 

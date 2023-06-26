@@ -17,5 +17,6 @@ public class PaymentManagementPageDto {
     private Revenue revenue;
     private PaymentStatusStateData statusData;
     private TicketTierData ticketTierData;
+    private long totalPayment;
 }
 

@@ -28,6 +28,7 @@ public class CustomerEntity {
     @OneToMany(mappedBy = "id")
     private List<PaymentEntity> payments;
 
-//    @OneToMany
-//    private List<CreditCardEntity> creditCards;
+    @OneToOne
+    @JoinColumn(name = "credit_card_id")
+    private CreditCardEntity creditCards;
 }

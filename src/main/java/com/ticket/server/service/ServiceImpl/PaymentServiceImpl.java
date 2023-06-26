@@ -3,7 +3,6 @@ package com.ticket.server.service.ServiceImpl;
 import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.*;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
-import com.ticket.server.entities.Flight;
 import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.enums.PaymentStatus;
 import com.ticket.server.enums.PaymentType;
@@ -12,7 +11,6 @@ import com.ticket.server.repository.FlightRepository;
 import com.ticket.server.repository.PaymentRepository;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +49,10 @@ public class PaymentServiceImpl implements IPaymentService {
         throw new NotFoundException("Can not found any valid payment");
     }
 
+    public Long getTotalPayment(){
+        return paymentRepository.count();
+    }
+
 
 
     @Override
@@ -80,29 +82,27 @@ public class PaymentServiceImpl implements IPaymentService {
         AtomicLong business = new AtomicLong();
         AtomicLong first = new AtomicLong();
 
-        paymentsToday.forEach(paymentDto -> {
+        for (PaymentDto paymentDto : paymentsToday) {
             totalPassengerToday.addAndGet(paymentDto.getTicket().size());
 
             amount.updateAndGet(v -> (v + paymentDto.getTotal()));
 
-            if (paymentDto.getPaymentType() == PaymentType.CARD){
+            if (paymentDto.getPaymentType() == PaymentType.CARD) {
                 cardTotal.getAndIncrement();
-            }else{
+            } else {
                 cashTotal.getAndIncrement();
             }
 
-            if (paymentDto.getPaymentStatus() == PaymentStatus.DECLINED){
+            if (paymentDto.getPaymentStatus() == PaymentStatus.DECLINED) {
                 declined.getAndIncrement();
-            }
-            else if (paymentDto.getPaymentStatus() == PaymentStatus.PENDING){
+            } else if (paymentDto.getPaymentStatus() == PaymentStatus.PENDING) {
                 pending.getAndIncrement();
-            }
-            else if (paymentDto.getPaymentStatus() == PaymentStatus.SUCCEEDED){
+            } else if (paymentDto.getPaymentStatus() == PaymentStatus.SUCCEEDED) {
                 succeeded.getAndIncrement();
             }
 
             for (TicketDto ticketDto : paymentDto.getTicket()) {
-                switch (ticketDto.getType()){
+                switch (ticketDto.getType()) {
                     case 0:
                         economy.getAndIncrement();
                         break;
@@ -114,10 +114,15 @@ public class PaymentServiceImpl implements IPaymentService {
                         first.getAndIncrement();
                 }
             }
-        });
+        }
 
-        final double cardPercent = (double) cardTotal.get() /(cardTotal.get()+cashTotal.get());
-        final double cashPercent = (double) cashTotal.get() /(cardTotal.get()+cashTotal.get());
+        double cardPercent = 0;
+        double cashPercent = 0;
+
+        if (cardTotal.get()+cashTotal.get() != 0) {
+            cardPercent = (double) cardTotal.get() / (cardTotal.get() + cashTotal.get());
+            cashPercent = (double) cashTotal.get() / (cardTotal.get() + cashTotal.get());
+        }
 
         final TotalStatisticalData totalData =
                 TotalStatisticalData
@@ -155,7 +160,8 @@ public class PaymentServiceImpl implements IPaymentService {
 
         return PaymentManagementPageDto
                 .builder()
-                .payments(getPaymentByPage(page,perPage).stream().map(PaymentNoTicketCustomerDto::fromPaymentDto).toList())
+                .totalPayment(getTotalPayment())
+                .payments(getPaymentByPage(page,perPage))
                 .revenue(revenue)
                 .statusData(paymentStatusStateData)
                 .ticketTierData(ticketTierData)
@@ -203,22 +209,22 @@ public class PaymentServiceImpl implements IPaymentService {
     }
 
     @Override
-    public PaymentDto getPaymentById(long id) {
+    public PaymentDtoDetail getPaymentById(long id) {
         final Optional<PaymentEntity> optionalPaymentEntity = paymentRepository.findById(id);
         if (optionalPaymentEntity.isPresent()){
-            return PaymentDto.fromEntity(optionalPaymentEntity.get());
+            return PaymentDtoDetail.fromEntity(optionalPaymentEntity.get());
         }
         throw new RuntimeException("Can not found any corresponding payment");
     }
 
     @Override
-    public List<PaymentDto> getPaymentByPage(int page, int perPage) {
+    public List<PaymentNoTicketCustomerDto> getPaymentByPage(int page, int perPage) {
        try {
            PageRequest pageRequest = PageRequest.of(page, perPage);
            return paymentRepository
                    .findAll(pageRequest).getContent()
                    .stream()
-                   .map(PaymentDto::fromEntity)
+                   .map(PaymentNoTicketCustomerDto::fromEntity)
                    .toList();
        }
        catch (Exception e){
@@ -228,20 +234,24 @@ public class PaymentServiceImpl implements IPaymentService {
 
     @Override
     public PaymentDto updatePayment(long id, AddPaymentDto newPaymentDti) {
-        final PaymentDto paymentDto = getPaymentById(id);
+        final PaymentDtoDetail paymentDto = getPaymentById(id);
 
         try {
             final PaymentEntity paymentEntity = paymentRepository.save(
                     PaymentEntity
-                        .builder()
-                        .id(paymentDto.getId())
-                        .status(newPaymentDti.getStatus())
-                        .paymentType(newPaymentDti.getPaymentType())
-//                        .customers(newPaymentDti.getCustomers())
-                        .total(newPaymentDti.getTotal())
-                        .createdDate(new Date(newPaymentDti.getCreatedDate()))
-//                        .ticket(newPaymentDti.getTicket())
-                        .build()
+
+                            .builder()
+                            .id(paymentDto.getId())
+                            .status(newPaymentDti.getStatus())
+                            .paymentType(newPaymentDti.getPaymentType())
+//                          .customers(newPaymentDti.getCustomers())
+
+                            .total(newPaymentDti.getTotal())
+
+                            .createdDate(new Date(newPaymentDti.getCreatedDate()))
+//                          .ticket(newPaymentDti.getTicket())
+
+                            .build()
             );
 
             return PaymentDto.fromEntity(paymentEntity);

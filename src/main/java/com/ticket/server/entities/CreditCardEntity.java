@@ -11,14 +11,12 @@ public class CreditCardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     private String creditNum;
     private Long expiredDate;
     private String cvc;
     private String nameCard;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "customer_id")
     private CustomerEntity customerEntity;
 
