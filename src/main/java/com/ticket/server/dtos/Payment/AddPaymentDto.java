@@ -16,7 +16,5 @@ public class AddPaymentDto {
     private PaymentType paymentType;
     private String customerId;
     private String flightId;
-
-
 }
 

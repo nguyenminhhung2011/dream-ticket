@@ -20,10 +20,8 @@ public class CreditCardController {
 
     @GetMapping("/getByCustomer/{id}")
     public ResponseEntity<?> getCreditCardByCustomerId(@PathVariable long id){
-        final List<CreditCardDto> result = creditCardRepository
-                .findAllByCustomerId(id)
-                .stream().map(CreditCardDto::fromEntity)
-                .toList();
+        final CreditCardDto result = CreditCardDto.fromEntity(creditCardRepository
+                .findAllByCustomerId(id));
 
         return ResponseEntity.ok(result);
 

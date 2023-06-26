@@ -17,5 +17,5 @@ public interface CreditCardRepository extends JpaRepository<CreditCardEntity,Lon
             """
             ,nativeQuery = true
     )
-    List<CreditCardEntity> findAllByCustomerId(long customerId);
+    CreditCardEntity findAllByCustomerId(long customerId);
 }

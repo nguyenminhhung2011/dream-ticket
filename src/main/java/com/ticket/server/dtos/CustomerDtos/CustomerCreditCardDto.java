@@ -20,7 +20,7 @@ public class CustomerCreditCardDto {
     private Long id;
     private String name;
     private String identifyNum;
-    private int birthday;
+    private long birthday;
     private String phone;
     private String email;
     private Gender gender;
@@ -37,6 +37,20 @@ public class CustomerCreditCardDto {
                 .email(entity.getEmail())
                 .gender(entity.getGender())
                 .creditCard(CreditCardDto.fromEntity(entity.getCreditCards()))
+                .build();
+    }
+
+    public CustomerEntity toEntity(){
+        return CustomerEntity
+                .builder()
+                .id(getId())
+                .name(getName())
+                .identifyNum(getIdentifyNum())
+                .birthday(getBirthday())
+                .phone(getPhone())
+                .email(getEmail())
+                .gender(getGender())
+                .creditCards(getCreditCard().toEntity())
                 .build();
     }
 }

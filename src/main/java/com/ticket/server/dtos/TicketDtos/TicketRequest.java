@@ -18,7 +18,7 @@ public class TicketRequest {
     private Double luggage;
     private Long birthday;
     private Long timeBought;
-    private int ticketType;
+    private int type;
     private int seat;
 }
 

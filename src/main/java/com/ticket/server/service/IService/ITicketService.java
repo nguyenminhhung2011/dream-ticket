@@ -21,6 +21,7 @@ public interface ITicketService {
     TicketDto getTicket(Long id) throws Exception;
 
     List<TicketDto> getAllTicket();
+    List<TicketDto> getByFlight(Long flightId);
     void deleteTicket(Long id);
 
     TicketDto updateTicket(Long id, TicketRequest request);

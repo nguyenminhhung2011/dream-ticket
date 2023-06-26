@@ -68,10 +68,10 @@ public class TicketServiceImpl implements ITicketService {
 
         request.getTickets().forEach(ticketRequest -> {
             final Optional<TicketInformationEntity> optionalTicketInfoEntity =  ticketInfoRepository
-                    .findByFlightAndType(request.getFlightId(),ticketRequest.getTicketType());
+                    .findByFlightAndType(request.getFlightId(),ticketRequest.getType());
 
             if (optionalTicketInfoEntity.isEmpty()){
-                throw new NotFoundException("Can not found any ticket information have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getTicketType());
+                throw new NotFoundException("Can not found any ticket information have id " + request.getFlightId() + " and have ticketType = " + ticketRequest.getType());
             }
 
             final TicketInformationEntity ticketInformationEntity = optionalTicketInfoEntity.get();
@@ -97,6 +97,8 @@ public class TicketServiceImpl implements ITicketService {
             ticketEntities.add(ticketEntity);
         });
 
+
+
         final List<TicketEntity> tickets = ticketRepository.saveAll(ticketEntities);
 
         savedPayment.setTicket(tickets);
@@ -119,6 +121,11 @@ public class TicketServiceImpl implements ITicketService {
     @Override
     public List<TicketDto> getAllTicket() {
         return ticketRepository.findAll().stream().map(TicketDto::fromEntity).toList();
+    }
+
+    @Override
+    public List<TicketDto> getByFlight(Long flightId) {
+        return ticketRepository.findAllByFlight(flightId).stream().map(TicketDto::fromEntity).toList();
     }
 
     @Override

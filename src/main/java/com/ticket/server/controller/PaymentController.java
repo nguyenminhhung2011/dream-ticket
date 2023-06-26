@@ -4,6 +4,7 @@ import com.ticket.server.dtos.Payment.AddPaymentDto;
 import com.ticket.server.dtos.Payment.PaymentDto;
 import com.ticket.server.dtos.Payment.PaymentDtoDetail;
 import com.ticket.server.dtos.Payment.PaymentFilter;
+import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,9 @@ public class PaymentController{
 
     @GetMapping("/get")
     public ResponseEntity<?> getPaymentById(@RequestParam long id){
-        final PaymentDtoDetail paymentDto = paymentService.getPaymentById(id);
+        final PaymentEntity paymentEntity = paymentService.getPaymentById(id);
 
-        final ResponseEntity<PaymentDtoDetail> response = ResponseEntity.ok(paymentDto);
+        final ResponseEntity<PaymentDtoDetail> response = ResponseEntity.ok(PaymentDtoDetail.fromEntity(paymentEntity));
 
         System.out.println(response.getBody());
 
@@ -65,7 +66,7 @@ public class PaymentController{
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updatePayment(@RequestParam long id,@RequestBody AddPaymentDto paymentDto){
+    public ResponseEntity<?> updatePayment(@RequestParam long id,@RequestBody PaymentDtoDetail paymentDto){
         Map<String,Object> responseMap = new HashMap<>();
 
         responseMap.put("success",paymentService.updatePayment(id,paymentDto));

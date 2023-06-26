@@ -1,12 +1,13 @@
 package com.ticket.server.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CreditCardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +19,6 @@ public class CreditCardEntity {
 
     @OneToOne
     @JoinColumn(name = "customer_id")
-    private CustomerEntity customerEntity;
+    private CustomerEntity customer;
 
 }

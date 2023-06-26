@@ -4,6 +4,7 @@ import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentManagementPageDto;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentNoCustomerDto;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentNoTicketCustomerDto;
+import com.ticket.server.entities.PaymentEntity;
 
 import java.util.List;
 
@@ -18,11 +19,11 @@ public interface IPaymentService {
 
     public List<PaymentDto> filterPaymentList(PaymentFilter paymentFilter);
 
-    public PaymentDtoDetail getPaymentById(long id);
+    public PaymentEntity getPaymentById(long id);
 
     public List<PaymentNoTicketCustomerDto> getPaymentByPage(int page, int perPage);
 
-    public PaymentDto updatePayment(long id, AddPaymentDto status);
+    public PaymentDtoDetail updatePayment(long id, PaymentDtoDetail status);
     public boolean deletePayment(long id);
 
     public PaymentManagementPageDto fetchPaymentManagementPage(int page,int perPage);

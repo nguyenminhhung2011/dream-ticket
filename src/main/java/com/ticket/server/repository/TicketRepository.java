@@ -17,11 +17,11 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Query(value =
             """
                 Select tic.* from ticket_entity as tic
-                where tic.flight_id = :flightId;
+                where tic.flight_id = :flightId
             """
             , nativeQuery = true
     )
-    List<TicketEntity> findAllByFlight(long flightId);
+    List<TicketEntity> findAllByFlight(Long flightId);
 
     @Query(
     value = """

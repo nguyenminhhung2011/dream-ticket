@@ -3,10 +3,14 @@ package com.ticket.server.service.ServiceImpl;
 import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.*;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
+import com.ticket.server.entities.CreditCardEntity;
+import com.ticket.server.entities.CustomerEntity;
 import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.enums.PaymentStatus;
 import com.ticket.server.enums.PaymentType;
 import com.ticket.server.exceptions.NotFoundException;
+import com.ticket.server.repository.CreditCardRepository;
+import com.ticket.server.repository.CustomerRepository;
 import com.ticket.server.repository.FlightRepository;
 import com.ticket.server.repository.PaymentRepository;
 import com.ticket.server.service.IService.IPaymentService;
@@ -28,6 +32,8 @@ public class PaymentServiceImpl implements IPaymentService {
 
     private final PaymentRepository paymentRepository;
     private final FlightRepository flightRepository;
+    private final CustomerRepository customerRepository;
+    private final CreditCardRepository creditCardRepository;
 
     @Override
     public List<PaymentDto> fetchPaymentData() {;
@@ -102,7 +108,7 @@ public class PaymentServiceImpl implements IPaymentService {
             }
 
             for (TicketDto ticketDto : paymentDto.getTicket()) {
-                switch (ticketDto.getType()) {
+                switch (ticketDto.getType()){
                     case 0:
                         economy.getAndIncrement();
                         break;
@@ -209,10 +215,10 @@ public class PaymentServiceImpl implements IPaymentService {
     }
 
     @Override
-    public PaymentDtoDetail getPaymentById(long id) {
+    public PaymentEntity getPaymentById(long id) {
         final Optional<PaymentEntity> optionalPaymentEntity = paymentRepository.findById(id);
         if (optionalPaymentEntity.isPresent()){
-            return PaymentDtoDetail.fromEntity(optionalPaymentEntity.get());
+            return (optionalPaymentEntity.get());
         }
         throw new RuntimeException("Can not found any corresponding payment");
     }
@@ -233,28 +239,37 @@ public class PaymentServiceImpl implements IPaymentService {
     }
 
     @Override
-    public PaymentDto updatePayment(long id, AddPaymentDto newPaymentDti) {
-        final PaymentDtoDetail paymentDto = getPaymentById(id);
+    public PaymentDtoDetail updatePayment(long id, PaymentDtoDetail newPaymentDti) {
+        final PaymentEntity oldPayment = getPaymentById(id);
+
+        System.out.println(newPaymentDti.getCustomer().getCreditCard().getId());
 
         try {
+            final CustomerEntity newCustomer = newPaymentDti.getCustomer().toEntity();
+            final CreditCardEntity newCreditCardEntity = newPaymentDti.getCustomer().getCreditCard().toEntity();
+
+            newCreditCardEntity.setCustomer(newCustomer);
+            newCustomer.setCreditCards(newCreditCardEntity);
+
+            creditCardRepository.save(newCreditCardEntity);
+
+            final CustomerEntity newCustomerEntity=  customerRepository.save(newCustomer);
+
             final PaymentEntity paymentEntity = paymentRepository.save(
                     PaymentEntity
-
-                            .builder()
-                            .id(paymentDto.getId())
-                            .status(newPaymentDti.getStatus())
-                            .paymentType(newPaymentDti.getPaymentType())
-//                          .customers(newPaymentDti.getCustomers())
-
-                            .total(newPaymentDti.getTotal())
-
-                            .createdDate(new Date(newPaymentDti.getCreatedDate()))
-//                          .ticket(newPaymentDti.getTicket())
-
-                            .build()
+                        .builder()
+                        .id(oldPayment.getId())
+                        .status(newPaymentDti.getPaymentStatus())
+                        .paymentType(newPaymentDti.getPaymentType())
+                        .customers(newCustomerEntity)
+                        .total(newPaymentDti.getTotal())
+                        .createdDate(new Date(newPaymentDti.getCreatedDate()))
+                        .flight(oldPayment.getFlight())
+                        .ticket(oldPayment.getTicket())
+                        .build()
             );
 
-            return PaymentDto.fromEntity(paymentEntity);
+            return PaymentDtoDetail.fromEntity(paymentEntity);
         }
 
         catch (Exception e){

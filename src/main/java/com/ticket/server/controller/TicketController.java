@@ -25,12 +25,22 @@ public class TicketController {
     @GetMapping("/{id}")
      public ResponseEntity<?> getTicket(@PathVariable Long id){
        try {
-            return ResponseEntity.ok(ticketService.getTicket(id));
+            return ResponseEntity.ok(ticketService.getTicket(id ));
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
-    @GetMapping
+
+    @GetMapping("/flightId={id}")
+    public ResponseEntity<?> getByFlightId(@PathVariable Long id){
+        try{
+            return ResponseEntity.ok(ticketService.getByFlight(id));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body("Error" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<?> getAllTicket(){
         try {
             return ResponseEntity.ok(ticketService.getAllTicket());

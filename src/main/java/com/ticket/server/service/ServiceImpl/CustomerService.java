@@ -34,8 +34,6 @@ public class CustomerService implements ICustomerService {
         }
     }
 
-
-
     @Override
     public List<CustomerRawDto> getCustomerByPage() {
         return null;

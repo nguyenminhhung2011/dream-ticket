@@ -1,6 +1,7 @@
 package com.ticket.server.dtos.TicketDtos;
 
 import com.ticket.server.entities.TicketEntity;
+import com.ticket.server.enums.Gender;
 import lombok.*;
 
 import java.util.Date;
@@ -37,6 +38,21 @@ public class TicketDto {
                 .luggage(entity.getLuggage())
                 .name(entity.getName())
                 .type(entity.getTicketInformation().getId().getTicketType())
+                .build();
+    }
+
+    public TicketEntity toEntity(){
+        return TicketEntity
+                .builder()
+                .id(getId())
+                .dob(new Date(birthday))
+                .emailAddress(getEmailAddress())
+                .gender(Gender.valueOf(getGender()))
+                .seat(getSeat())
+                .timeBought(new Date(getTimeBought()))
+                .phoneNumber(getPhoneNumber())
+                .luggage(getLuggage())
+                .name(getName())
                 .build();
     }
 
