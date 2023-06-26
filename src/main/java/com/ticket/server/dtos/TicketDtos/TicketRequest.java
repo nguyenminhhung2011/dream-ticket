@@ -16,7 +16,7 @@ public class TicketRequest {
     private String phoneNumber;
     private String emailAddress;
     private Double luggage;
-    private Long dob;
+    private Long birthday;
     private Long timeBought;
     private int ticketType;
     private int seat;

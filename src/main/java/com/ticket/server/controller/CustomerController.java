@@ -29,6 +29,16 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<?> searchCustomer(
+        @PathVariable("keyword") String keyword){
+        try {
+            return ResponseEntity.ok(customerService.searchCustomer(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCustomerById(@PathVariable long id){

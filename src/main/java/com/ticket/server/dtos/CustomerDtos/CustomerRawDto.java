@@ -15,7 +15,7 @@ public class CustomerRawDto {
     private Long id;
     private String name;
     private String identifyNum;
-    private int birthday;
+    private Long birthday;
     private String phone;
     private String email;
     private Gender gender;
