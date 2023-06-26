@@ -102,7 +102,7 @@ public class PaymentServiceImpl implements IPaymentService {
             }
 
             for (TicketDto ticketDto : paymentDto.getTicket()) {
-                switch (ticketDto.getType()){
+                switch (ticketDto.getTicketType()){
                     case 0:
                         economy.getAndIncrement();
                         break;

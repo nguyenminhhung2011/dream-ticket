@@ -122,6 +122,11 @@ public class TicketServiceImpl implements ITicketService {
     }
 
     @Override
+    public List<TicketDto> getByFlight(Long flightId) {
+        return ticketRepository.findAllByFlight(flightId).stream().map(TicketDto::fromEntity).toList();
+    }
+
+    @Override
     public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
     }
