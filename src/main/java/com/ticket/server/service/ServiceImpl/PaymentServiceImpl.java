@@ -14,6 +14,7 @@ import com.ticket.server.repository.CustomerRepository;
 import com.ticket.server.repository.FlightRepository;
 import com.ticket.server.repository.PaymentRepository;
 import com.ticket.server.service.IService.IPaymentService;
+import com.ticket.server.service.IService.ITicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class PaymentServiceImpl implements IPaymentService {
     private final FlightRepository flightRepository;
     private final CustomerRepository customerRepository;
     private final CreditCardRepository creditCardRepository;
+    private final ITicketService ticketService;
 
     @Override
     public List<PaymentDto> fetchPaymentData() {;
@@ -280,12 +282,23 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public boolean deletePayment(long id) {
         try {
-            paymentRepository.deleteById(id);
+            final Optional<PaymentEntity> optionalPaymentEntity = paymentRepository.findById(id);
+
+            if (optionalPaymentEntity.isPresent()) {
+                final PaymentEntity paymentEntity = optionalPaymentEntity.get();
+
+                paymentEntity.getTicket().forEach(ticketEntity -> {
+                    ticketService.deleteTicket(ticketEntity.getId());
+                });
+
+                paymentRepository.deleteById(id);
+                return true;
+            }
+            return false;
         }
         catch (Exception e){
             throw new RuntimeException(e);
         }
 
-        return true;
     }
 }
