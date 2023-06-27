@@ -11,15 +11,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @Builder
-public class PaymentDtoDetail {
+public class PaymentDtoDetail implements Serializable {
     private Long id;
-    private Double total;
     private Long createdDate;
+    private Double total;
     private PaymentStatus paymentStatus;
     private PaymentType paymentType;
     private FlightDto flight;

@@ -4,11 +4,9 @@ import com.ticket.server.entities.CreditCardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class CreditCardDto {
     private Long id;

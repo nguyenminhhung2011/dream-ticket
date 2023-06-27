@@ -11,9 +11,9 @@ import lombok.*;
 public class CreditCardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String creditNum;
-    private Long expiredDate;
+    private long expiredDate;
     private String cvc;
     private String nameCard;
 
