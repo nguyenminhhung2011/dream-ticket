@@ -15,7 +15,7 @@ public class TicketDto {
     private long id;
     private String name;
     private String gender;
-    private String phoneNumber;
+    private String phone;
     private String emailAddress;
     private int seat;
     private double price;
@@ -34,7 +34,7 @@ public class TicketDto {
                 .seat(entity.getSeat())
                 .price(entity.getTicketInformation().getPrice())
                 .timeBought(entity.getTimeBought().getTime())
-                .phoneNumber(entity.getPhoneNumber())
+                .phone(entity.getPhoneNumber())
                 .luggage(entity.getLuggage())
                 .name(entity.getName())
                 .type(entity.getTicketInformation().getId().getTicketType())
@@ -50,7 +50,7 @@ public class TicketDto {
                 .gender(Gender.valueOf(getGender()))
                 .seat(getSeat())
                 .timeBought(new Date(getTimeBought()))
-                .phoneNumber(getPhoneNumber())
+                .phoneNumber(getPhone())
                 .luggage(getLuggage())
                 .name(getName())
                 .build();

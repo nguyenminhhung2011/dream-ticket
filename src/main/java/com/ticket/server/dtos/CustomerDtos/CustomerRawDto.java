@@ -2,6 +2,7 @@ package com.ticket.server.dtos.CustomerDtos;
 
 import com.ticket.server.entities.CustomerEntity;
 import com.ticket.server.enums.Gender;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

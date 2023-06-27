@@ -67,11 +67,7 @@ public class PaymentController{
 
     @PutMapping("/update")
     public ResponseEntity<?> updatePayment(@RequestParam long id,@RequestBody PaymentDtoDetail paymentDto){
-        Map<String,Object> responseMap = new HashMap<>();
-
-        responseMap.put("success",paymentService.updatePayment(id,paymentDto));
-
-        return ResponseEntity.ok(responseMap);
+        return ResponseEntity.ok(paymentService.updatePayment(id,paymentDto));
     }
     @DeleteMapping("/delete")
     public ResponseEntity<?> deletePayment(@RequestParam long id){
