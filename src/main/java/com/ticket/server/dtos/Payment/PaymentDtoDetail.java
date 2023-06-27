@@ -2,6 +2,7 @@ package com.ticket.server.dtos.Payment;
 
 import com.ticket.server.dtos.CustomerDtos.CustomerCreditCardDto;
 import com.ticket.server.dtos.CustomerDtos.CustomerRawDto;
+import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.enums.PaymentStatus;
@@ -21,6 +22,7 @@ public class PaymentDtoDetail {
     private Long createdDate;
     private PaymentStatus paymentStatus;
     private PaymentType paymentType;
+    private FlightDto flight;
     private List<TicketDto> ticket;
     private CustomerCreditCardDto customer;
 
@@ -34,6 +36,7 @@ public class PaymentDtoDetail {
                 .ticket(paymentEntity.getTicket().stream().map(TicketDto::fromEntity).toList())
                 .total(paymentEntity.getTotal())
                 .paymentType(paymentEntity.getPaymentType())
+                .flight(new FlightDto(paymentEntity.getFlight()))
                 .build();
     }
 }

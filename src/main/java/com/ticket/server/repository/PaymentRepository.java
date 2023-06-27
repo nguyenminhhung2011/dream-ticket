@@ -21,6 +21,19 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     )
     List<PaymentEntity> findByCreatedDate(Date time);
 
+    @Query(
+            value = """
+                select pa.* from payment_entity pa
+                join customer_entity cus 
+                on cus.id = pa.customer_id
+                join flight fl 
+                on fl.id = pa.flight_id
+                where cus.name like %:keyword%
+            """
+            ,nativeQuery = true
+    )
+    List<PaymentEntity> searchPayment(String keyword);
+
     @Query(value = """
             SELECT p.*
             FROM payment_entity AS p
@@ -37,8 +50,6 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             String paymentStatus,
             String paymentType
     );
-
-
 
     @Query(
             value = """

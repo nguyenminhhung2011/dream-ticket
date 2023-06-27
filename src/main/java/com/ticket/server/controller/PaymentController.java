@@ -43,14 +43,10 @@ public class PaymentController{
     public ResponseEntity<?> getPaymentById(@RequestParam long id){
         final PaymentEntity paymentEntity = paymentService.getPaymentById(id);
 
-        final ResponseEntity<PaymentDtoDetail> response = ResponseEntity.ok(PaymentDtoDetail.fromEntity(paymentEntity));
-
-        System.out.println(response.getBody());
-
-        return response;
+        return ResponseEntity.ok(PaymentDtoDetail.fromEntity(paymentEntity));
     }
     @GetMapping("/getByCustomer")
-    public ResponseEntity<?> getPaymentByPage(@RequestParam long id){
+    public ResponseEntity<?> getPaymentByCustomerId(@RequestParam long id){
         return ResponseEntity.ok(paymentService.getPaymentByCustomerId(id));
     }
 

@@ -186,18 +186,18 @@ public class PaymentServiceImpl implements IPaymentService {
 
 
     @Override
-    public List<PaymentDto> searchPaymentItem(String keyword) {
+    public List<PaymentNoTicketCustomerDto> searchPaymentItem(String keyword) {
         return paymentRepository
-                .findAll()
+                .searchPayment(keyword)
                 .stream()
-                .map(PaymentDto::fromEntity)
+                .map(PaymentNoTicketCustomerDto::fromEntity)
                 .toList();
     }
 
     @Override
-    public List<PaymentNoCustomerDto> getPaymentByCustomerId(long id) {
+    public List<PaymentNoTicketCustomerDto> getPaymentByCustomerId(long id) {
         try {
-            return paymentRepository.findByCustomerId(id).stream().map(PaymentNoCustomerDto::fromEntity).toList();
+            return paymentRepository.findByCustomerId(id).stream().map(PaymentNoTicketCustomerDto::fromEntity).toList();
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }

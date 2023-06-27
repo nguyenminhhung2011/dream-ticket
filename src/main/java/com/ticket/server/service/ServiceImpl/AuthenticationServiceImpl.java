@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class AuthenticationServiceImpl implements IAuthenticationService {
+public class    AuthenticationServiceImpl implements IAuthenticationService {
 
     private final JwtService _jwtService;
     private final UserRepository _userRepository;

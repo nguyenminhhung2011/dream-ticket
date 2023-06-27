@@ -1,5 +1,6 @@
 package com.ticket.server.dtos.CustomerDtos;
 
+import com.ticket.server.dtos.CreditCard.CreditCardDto;
 import com.ticket.server.entities.CustomerEntity;
 import com.ticket.server.enums.Gender;
 
@@ -20,6 +21,7 @@ public class CustomerRawDto {
     private String phone;
     private String email;
     private Gender gender;
+    private CreditCardDto creditCardDto;
 
     public static CustomerRawDto fromEntity(CustomerEntity entity){
         return CustomerRawDto
@@ -31,6 +33,7 @@ public class CustomerRawDto {
                 .phone(entity.getPhone())
                 .email(entity.getEmail())
                 .gender(entity.getGender())
+                .creditCardDto(CreditCardDto.fromEntity(entity.getCreditCards()))
                 .build();
     }
 }

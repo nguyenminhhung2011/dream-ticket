@@ -27,14 +27,14 @@ public class PaymentDto implements Serializable {
     private PaymentStatus paymentStatus;
     private PaymentType paymentType;
     private List<TicketDto> ticket;
-    private CustomerRawDto customers;
+    private CustomerRawDto customer;
 
     public static PaymentDto fromEntity(PaymentEntity paymentEntity){
         return PaymentDto
                 .builder()
                 .id(paymentEntity.getId())
                 .createdDate(paymentEntity.getCreatedDate().getTime())
-                .customers(CustomerRawDto.fromEntity(paymentEntity.getCustomers()))
+                .customer(CustomerRawDto.fromEntity(paymentEntity.getCustomers()))
                 .paymentStatus(paymentEntity.getStatus())
                 .ticket(paymentEntity.getTicket().stream().map(TicketDto::fromEntity).toList())
                 .total(paymentEntity.getTotal())

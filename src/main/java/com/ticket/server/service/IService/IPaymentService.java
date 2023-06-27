@@ -2,7 +2,6 @@ package com.ticket.server.service.IService;
 
 import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentManagementPageDto;
-import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentNoCustomerDto;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.PaymentNoTicketCustomerDto;
 import com.ticket.server.entities.PaymentEntity;
 
@@ -13,9 +12,9 @@ public interface IPaymentService {
 
     PaymentDto getLatestPaymentByCustomerId(long id);
 
-    List<PaymentDto> searchPaymentItem(String keyword);
+    List<PaymentNoTicketCustomerDto> searchPaymentItem(String keyword);
 
-    public List<PaymentNoCustomerDto> getPaymentByCustomerId(long id);
+    public List<PaymentNoTicketCustomerDto> getPaymentByCustomerId(long id);
 
     public List<PaymentDto> filterPaymentList(PaymentFilter paymentFilter);
 
