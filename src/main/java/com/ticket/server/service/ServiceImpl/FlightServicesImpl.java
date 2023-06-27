@@ -1,8 +1,14 @@
 package com.ticket.server.service.ServiceImpl;
 
 import com.ticket.server.entities.Flight;
+import com.ticket.server.entities.PaymentEntity;
+import com.ticket.server.entities.TicketInformationEntity;
 import com.ticket.server.repository.FlightRepository;
+import com.ticket.server.repository.PaymentRepository;
+import com.ticket.server.repository.TicketInformationRepository;
 import com.ticket.server.service.IService.IFlightService;
+import com.ticket.server.service.IService.IPaymentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,15 +19,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class FlightServicesImpl implements IFlightService {
-
-    @Autowired
     private  final FlightRepository flightRepository;
+    private final PaymentRepository paymentRepository;
 
-    public FlightServicesImpl(FlightRepository flightRepository) {
-        this.flightRepository = flightRepository;
-    }
+    private final TicketInformationRepository ticketInformationRepository;
+    private final IPaymentService paymentService;
+
+
 
     @Override
     public Flight addFlight(Flight flight) {
@@ -39,7 +46,28 @@ public class FlightServicesImpl implements IFlightService {
     }
 
     @Override
-    public void deleteFlight(Long id) {flightRepository.deleteById(id);}
+    public void deleteFlight(Long id) {
+       try{
+           final Optional<Flight> optionalFlight = flightRepository.findById(id);
+           if(optionalFlight.isEmpty()){
+               return;
+           }
+           final List<PaymentEntity> listPayment =  paymentRepository.findByFlightId(id);
+           for (var item :listPayment) {
+               var deleted =  paymentService.deletePayment(item.getId());
+               if(!deleted){
+                   return;
+               }
+           }
+           final List<TicketInformationEntity> ticketInformationEntities =  ticketInformationRepository.findAllByFlight(id);
+           for (var item: ticketInformationEntities) {
+               ticketInformationRepository.deleteById(item.getId());
+           }
+           flightRepository.deleteById(id);
+       } catch (Exception e){
+            throw new RuntimeException();
+       }
+    }
 
     @Override
     public Optional<Flight> updateFlight(Long id, Flight flight) {
