@@ -13,7 +13,7 @@ public class TicketRequest {
     private String name;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    private String phoneNumber;
+    private String phone;
     private String emailAddress;
     private Double luggage;
     private Long birthday;

@@ -4,6 +4,7 @@ import com.ticket.server.entities.Flight;
 import com.ticket.server.entities.TicketInformationEntity;
 import com.ticket.server.entities.TicketInformationEntityId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -21,4 +22,11 @@ public interface TicketInformationRepository extends JpaRepository<TicketInforma
                 and t.ticket_type = :ticketType
             """,nativeQuery = true)
     Optional<TicketInformationEntity> findByFlightAndType(Long flight,int ticketType);
+
+    @Modifying
+    @Query(value = """
+            delete from ticket_information t where t.flight_id = :id
+            """, nativeQuery = true)
+    void deleteByFlightId(long id);
+
 }

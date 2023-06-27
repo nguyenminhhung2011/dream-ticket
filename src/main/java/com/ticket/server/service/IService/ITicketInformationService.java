@@ -10,4 +10,6 @@ public interface ITicketInformationService {
 
     boolean addTicketInformation(AddTicInformationRequest request) throws Exception;
 
+    public boolean deleteTicInformation(long id);
+
 }

@@ -60,6 +60,15 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     )
     List<PaymentEntity> findByCustomerId(long id);
 
+    @Query(
+            value = """
+            select * from payment_entity pa
+            where pa.flight_id = :id
+            """,
+            nativeQuery = true
+    )
+    List<PaymentEntity> findByFlightId(long id);
+
 
     @Query(
             value = """

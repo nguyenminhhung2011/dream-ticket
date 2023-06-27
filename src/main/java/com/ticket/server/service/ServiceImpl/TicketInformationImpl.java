@@ -51,4 +51,17 @@ public class TicketInformationImpl implements ITicketInformationService {
 
         return !ticketInformationRepository.saveAll(ticketInformationEntities).isEmpty();
     }
+
+    @Override
+    public boolean deleteTicInformation(long id) {
+        try{
+//            final Optional<TicketInformationEntity> optionalTicketInformation = ticketInformationRepository.findById(id);
+//            if(optionalTicketInformation.isPresent()){
+//                ticketInformationRepository.deleteById(TicketInformationEntityId);
+//            }
+            return false;
+        } catch (Exception e){
+            throw new RuntimeException();
+        }
+    }
 }

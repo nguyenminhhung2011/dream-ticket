@@ -42,7 +42,7 @@ public class PaymentNoTicketCustomerDto {
                 .paymentStatus(paymentDto.getPaymentStatus())
                 .total(paymentDto.getTotal())
                 .paymentType(paymentDto.getPaymentType())
-                .customers(paymentDto.getCustomers())
+                .customers(paymentDto.getCustomer())
                 .build();
     }
 
