@@ -45,6 +45,12 @@ public class PaymentController{
 
         return ResponseEntity.ok(PaymentDtoDetail.fromEntity(paymentEntity));
     }
+
+    @GetMapping("/id={id}")
+    public ResponseEntity<?> getNormalPaymentById(@PathVariable("id") long id){
+        return ResponseEntity.ok(PaymentDto.fromEntity(paymentService.getPaymentById(id)));
+    }
+
     @GetMapping("/getByCustomer")
     public ResponseEntity<?> getPaymentByCustomerId(@RequestParam long id){
         return ResponseEntity.ok(paymentService.getPaymentByCustomerId(id));
