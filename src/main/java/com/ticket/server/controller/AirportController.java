@@ -5,18 +5,15 @@ import com.ticket.server.dtos.AirportDtos.AirportDto;
 import com.ticket.server.dtos.AirportDtos.EditAirportDto;
 import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Airport;
-import com.ticket.server.service.IAirportService;
+import com.ticket.server.service.IService.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.print.attribute.standard.Media;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RequestMapping(value = "/api/v1/airport", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -35,7 +32,8 @@ public class AirportController {
                 addAirportDto.getImageUrl(),
                 addAirportDto.getDescription(),
                 addAirportDto.getOpenTime(),
-                addAirportDto.getCloseTime()
+                addAirportDto.getCloseTime(),
+                addAirportDto.getCode()
         );
         return new AirportDto(airportService.addAirport(airport));
     }
@@ -50,7 +48,8 @@ public class AirportController {
                 editAirportDto.getImageUrl(),
                 editAirportDto.getDescription(),
                 editAirportDto.getOpenTime(),
-                editAirportDto.getCloseTime()
+                editAirportDto.getCloseTime(),
+                editAirportDto.getCode()
         );
 
         return airportService.updateAirport(airport, id)
@@ -93,6 +92,8 @@ public class AirportController {
     public void deleteAirport(@PathVariable Long id){
         airportService.deleteAirport(id);
     }
+
+
 
     private ResponseStatusException throwNotFoundException(){
         return new ResponseStatusException(HttpStatus.NOT_FOUND);

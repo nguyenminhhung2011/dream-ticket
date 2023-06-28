@@ -18,7 +18,6 @@ public class FlightClassController {
         this.flightClassService = flightClassService;
     }
 
-
     @PostMapping("/add")
     public ResponseEntity<FlightClass> addFlightClass(@RequestBody FlightClass flightClass){
         return flightClassService.addFlightClass(flightClass);

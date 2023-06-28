@@ -1,40 +1,16 @@
 package com.ticket.server.dtos;
 
+import lombok.Data;
+
 import java.util.List;
 
 enum CODE{
     SUCCESS,
     ERROR
 }
+@Data
 public class SimpleResponse<T> {
-    public Integer getCurrentPage() {
-        return currentPage;
-    }
 
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public Integer getTotalPages() {
-        return totalPages;
-    }
-    public void setTotalPages(Integer totalPages) {
-        this.totalPages = totalPages;
-    }
-    public List<T> getResponseData() {
-        return responseData;
-    }
-    public void setResponseData(List<T> responseData) {
-        this.responseData = responseData;
-    }
 
     private Integer currentPage;
 
@@ -42,11 +18,13 @@ public class SimpleResponse<T> {
 
     private Integer totalPages;
 
+    private List<T> responseData;
+
+
     public SimpleResponse(Integer currentPage, Integer pageSize,Integer totalPages, List<T> responseData) {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.totalPages = totalPages;
         this.responseData = responseData;
     }
-    private List<T> responseData;
 }

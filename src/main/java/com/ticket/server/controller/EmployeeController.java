@@ -1,6 +1,5 @@
 package com.ticket.server.controller;
 
-import com.ticket.server.data.UserCredentials;
 import com.ticket.server.model.Employee;
 import com.ticket.server.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,6 @@ public class EmployeeController {
         return employeeService.addEmployee(employee);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Employee> login(@RequestBody UserCredentials credentials){
-        return employeeService.login(credentials);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployee(@PathVariable Long id){
         return employeeService.getEmployee(id);
@@ -39,7 +33,7 @@ public class EmployeeController {
         return employeeService.getAllEmployee();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<Employee> deleteEmployee(@PathVariable Long id){
         return employeeService.deleteEmployee(id);
     }
