@@ -1,10 +1,15 @@
 package com.ticket.server.dtos.FlightDtos;
 
+import com.ticket.server.dtos.AirportDtos.StopAirportRequest;
 import com.ticket.server.entities.Airline;
 import com.ticket.server.entities.Airport;
+import com.ticket.server.entities.StopAirport;
+import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
+@Data
 public class AddFlightDto {
     private Airport departureAirport;
     private Airport arrivalAirport;
@@ -12,51 +17,14 @@ public class AddFlightDto {
     private Date departureTime;
     private Date arrivalTime;
 
-    public Airport getDepartureAirport() {
-        return departureAirport;
-    }
+    private List<StopAirportRequest> stopAirports;
 
-    public void setDepartureAirport(Airport departureAirport) {
-        this.departureAirport = departureAirport;
-    }
-
-    public Airport getArrivalAirport() {
-        return arrivalAirport;
-    }
-
-    public void setArrivalAirport(Airport arrivalAirport) {
-        this.arrivalAirport = arrivalAirport;
-    }
-
-    public Airline getAirline() {
-        return airline;
-    }
-
-    public void setAirline(Airline airline) {
-        this.airline = airline;
-    }
-
-    public Date getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(Date departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public Date getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(Date arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public AddFlightDto(Airport departureAirport, Airport arrivalAirport, Airline airline, Date departureTime, Date arrivalTime) {
+    public AddFlightDto(Airport departureAirport, Airport arrivalAirport, Airline airline, Date departureTime, Date arrivalTime, List<StopAirportRequest> stopAirports) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.airline = airline;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.stopAirports = stopAirports;
     }
 }

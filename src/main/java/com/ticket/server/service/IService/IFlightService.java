@@ -1,5 +1,9 @@
 package com.ticket.server.service.IService;
 
+import com.ticket.server.dtos.FlightDtos.AddFlightDto;
+import com.ticket.server.dtos.FlightDtos.EditFlightDto;
+import com.ticket.server.dtos.FlightDtos.FlightDto;
+import com.ticket.server.dtos.FlightDtos.FlightNotStopResponse;
 import com.ticket.server.entities.Flight;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,29 +15,29 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IFlightService {
-     Flight addFlight(Flight flight);
+     FlightNotStopResponse addFlight(AddFlightDto flight);
 
-     Optional<Flight> getFlight(Long id);
+     FlightDto getFlight(Long id);
 
-     List<Flight> getAllFlight();
+     List<FlightNotStopResponse> getAllFlight();
 
      void deleteFlight(Long id);
 
-     Optional<Flight> updateFlight(Long id, Flight flight);
+     FlightNotStopResponse updateFlight(Long id, EditFlightDto flight);
 
-     List<Flight> searchFlights(String departureKeyword, String arrivalKeyword, String arrivalTimeKeyword) ;
-     List<Flight> getFlightsSortedBy(String sortBy, boolean ascending) ;
-     List<Flight> getFlightByPage(int cursor, int pageSize) ;
+     List<FlightDto> searchFlights(String departureKeyword, String arrivalKeyword, String arrivalTimeKeyword) ;
+     List<FlightDto> getFlightsSortedBy(String sortBy, boolean ascending) ;
+     List<FlightNotStopResponse> getFlightByPage(int cursor, int pageSize) ;
      Integer getPages(int pageSize);
 
-     List<Flight> filterFlight(String locationDeparture,
+     List<FlightNotStopResponse> filterFlight(String locationDeparture,
                                       String locationArrival,
                                       String airlineName,
                                       Integer limit,
                                       Integer offset);
 
-     List<Flight> getFlightWithArrivalId(Integer id);
-     List<Flight> getFlightWithDepartureId(Integer id);
-     List<Flight> getFlightByAirportId(Integer id);
+     List<FlightNotStopResponse> getFlightWithArrivalId(Integer id);
+     List<FlightNotStopResponse> getFlightWithDepartureId(Integer id);
+     List<FlightNotStopResponse> getFlightByAirportId(Integer id);
 
 }

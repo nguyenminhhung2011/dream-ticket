@@ -1,8 +1,12 @@
 package com.ticket.server.service.ServiceImpl;
 
 import com.ticket.server.entities.Airport;
+import com.ticket.server.entities.PaymentEntity;
+import com.ticket.server.entities.StopAirport;
 import com.ticket.server.repository.AirportRepository;
+import com.ticket.server.repository.StopAirportRepository;
 import com.ticket.server.service.IService.IAirportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,13 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AirportServicesImpl implements IAirportService {
-    @Autowired
     private final AirportRepository airportRepository;
+    private final StopAirportRepository stopAirportRepository;
 
-    public AirportServicesImpl(AirportRepository airportRepository) {
-        this.airportRepository =  airportRepository;
-    }
     @Override
     public List<Airport> getAirportByPage(int cursor, int pageSize) {
         PageRequest pageable = PageRequest.of(cursor, pageSize);
@@ -52,7 +54,21 @@ public class AirportServicesImpl implements IAirportService {
     }
 
     @Override
-    public void deleteAirport(Long id) {airportRepository.deleteById(id);}
+    public void deleteAirport(Long id) {
+        try{
+            final  Optional<Airport> optionalAirport = airportRepository.findById(id);
+            if(optionalAirport.isEmpty()){
+                return;
+            }
+            final List<StopAirport> stopAirports =  stopAirportRepository.findAllByFlight(id);
+            for (var item: stopAirports) {
+                stopAirportRepository.deleteById(item.getId());
+            }
+            airportRepository.deleteById(id);
+        } catch (Exception e){
+            throw new RuntimeException();
+        }
+    }
 
     @Override
     public Optional<Airport> updateAirport(Airport airport, Long id) {

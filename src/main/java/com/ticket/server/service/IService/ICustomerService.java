@@ -16,7 +16,7 @@ public interface ICustomerService {
 
     CustomerRawDto addNewCustomer(AddCustomerRequest customer);
 
-    CustomerEntity updateNewCustomer(CustomerRawDto customer );
+    CustomerRawDto updateNewCustomer(CustomerRawDto customer );
 
     boolean deleteCustomer(long id);
 

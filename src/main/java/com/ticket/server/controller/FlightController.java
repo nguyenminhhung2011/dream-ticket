@@ -3,6 +3,7 @@ package com.ticket.server.controller;
 import com.ticket.server.dtos.FlightDtos.AddFlightDto;
 import com.ticket.server.dtos.FlightDtos.EditFlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightDto;
+import com.ticket.server.dtos.FlightDtos.FlightNotStopResponse;
 import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Flight;
 import com.ticket.server.service.IService.IFlightService;
@@ -25,75 +26,53 @@ public class FlightController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody FlightDto addFlight(@RequestBody AddFlightDto addFlightDto){
-        Flight flight = new Flight(
-                addFlightDto.getDepartureAirport(),
-                addFlightDto.getArrivalAirport(),
-                addFlightDto.getAirline(),
-                addFlightDto.getDepartureTime(),
-                addFlightDto.getArrivalTime()
-        );
-        return new FlightDto(flightService.addFlight(flight));
+    public @ResponseBody FlightNotStopResponse addFlight(@RequestBody AddFlightDto addFlightDto){
+        return flightService.addFlight(addFlightDto);
     }
 
     @GetMapping("/id={id}")
     public @ResponseBody FlightDto getFlight(@PathVariable Long id){
-        return flightService.getFlight(id)
-                .map(FlightDto::new)
-                .orElseThrow(this::throwNotFoundException);
+        return flightService.getFlight(id);
     }
 
     @GetMapping("/")
-    public @ResponseBody List<FlightDto> getAllFlight(){
-        return flightService.getAllFlight()
-                .stream()
-                .map(FlightDto::new)
-                .collect(Collectors.toList());
+    public @ResponseBody List<FlightNotStopResponse> getAllFlight(){
+        return flightService.getAllFlight();
     }
     @GetMapping("/filter/cursor={cursor}&pageSize={pageSize}")
-    public @ResponseBody List<FlightDto> filterFlight(
+    public @ResponseBody List<FlightNotStopResponse> filterFlight(
             @RequestParam(name = "locationArrival") String locationArrival,
             @RequestParam(name= "locationDeparture") String locationDeparture,
             @RequestParam(name = "airlineName") String airlineName,
             @PathVariable("cursor") Integer cursor,
             @PathVariable("pageSize") Integer pageSize
     ){
-
         return flightService.filterFlight(
                 locationArrival,
                 locationDeparture,
                 airlineName,
                 pageSize,
                 cursor * pageSize
-        ).stream().map(FlightDto::new).collect(Collectors.toList());
+        );
     }
 
     @GetMapping("/departureId={id}")
-    public  @ResponseBody List<FlightDto> getFlightByDepartureId(
+    public  @ResponseBody List<FlightNotStopResponse> getFlightByDepartureId(
             @PathVariable("id")Integer id
             ) {
-        return flightService.getFlightWithDepartureId(id)
-                .stream()
-                .map(FlightDto::new)
-                .collect(Collectors.toList());
+        return flightService.getFlightWithDepartureId(id);
     }
     @GetMapping("/arrivalId={id}")
-    public  @ResponseBody List<FlightDto> getFlightByArrivalId(
+    public  @ResponseBody List<FlightNotStopResponse> getFlightByArrivalId(
             @PathVariable("id")Integer id
             ) {
-        return flightService.getFlightWithArrivalId(id)
-                .stream()
-                .map(FlightDto::new)
-                .collect(Collectors.toList());
+        return flightService.getFlightWithArrivalId(id);
     }
     @GetMapping("/airport={id}")
-    public  @ResponseBody List<FlightDto> getFlightByAirportId(
+    public  @ResponseBody List<FlightNotStopResponse> getFlightByAirportId(
             @PathVariable("id")Integer id
             ) {
-        return flightService.getFlightByAirportId(id)
-                .stream()
-                .map(FlightDto::new)
-                .collect(Collectors.toList());
+        return flightService.getFlightByAirportId(id);
     }
 
 
@@ -106,19 +85,10 @@ public class FlightController {
 
     @PatchMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody FlightDto updateFlight(
+    public @ResponseBody FlightNotStopResponse updateFlight(
             @PathVariable("id") Long id,
             @RequestBody EditFlightDto editFlightDto){
-        Flight flight = new Flight(
-                editFlightDto.getDepartureAirport(),
-                editFlightDto.getArrivalAirport(),
-                editFlightDto.getAirline(),
-                editFlightDto.getDepartureTime(),
-                editFlightDto.getArrivalTime()
-        );
-        return flightService.updateFlight(id, flight)
-                .map(FlightDto::new)
-                .orElseThrow(this::throwNotFoundException);
+        return flightService.updateFlight(id, editFlightDto);
     }
 
     @GetMapping("/search")
@@ -127,10 +97,7 @@ public class FlightController {
             @RequestParam(name = "departureKeyword") String departureKeyword,
             @RequestParam(name = "arrivalKeyword") String arrivalKeyword,
             @RequestParam(name = "arrivalTimeKeyword") String arrivalTimeKeyword) {
-        return flightService.searchFlights(departureKeyword, arrivalKeyword, arrivalTimeKeyword)
-                .stream()
-                .map(FlightDto::new)
-                .collect(Collectors.toList());
+        return flightService.searchFlights(departureKeyword, arrivalKeyword, arrivalTimeKeyword);
     }
 
     @GetMapping("/sort")
@@ -138,18 +105,13 @@ public class FlightController {
     public @ResponseBody List<FlightDto> getFlightsSortedBy(
             @RequestParam(name = "sortBy") String sortBy,
             @RequestParam(name = "ascending", defaultValue = "true") boolean ascending) {
-        return flightService.getFlightsSortedBy(sortBy, ascending)
-                .stream()
-                .map(FlightDto::new)
-                .collect(Collectors.toList());
+        return flightService.getFlightsSortedBy(sortBy, ascending);
     }
     @GetMapping("/page/cursor={cursor}&pageSize={pageSize}")
-    public @ResponseBody SimpleResponse<FlightDto> getFlightByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
-        var flights =  flightService.getFlightByPage(cursor, pageSize).stream()
-                .map(FlightDto::new)
-                .toList();
+    public @ResponseBody SimpleResponse<FlightNotStopResponse> getFlightByPage(@PathVariable("cursor") int cursor, @PathVariable("pageSize") int pageSize){
+        var flights =  flightService.getFlightByPage(cursor, pageSize);
         var totalPages = flightService.getPages(pageSize);
-        return new SimpleResponse<FlightDto>(cursor, pageSize, totalPages, flights);
+        return new SimpleResponse<FlightNotStopResponse>(cursor, pageSize, totalPages, flights);
     }
 
 

@@ -67,7 +67,7 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public CustomerEntity updateNewCustomer(CustomerRawDto customer) {
+    public CustomerRawDto updateNewCustomer(CustomerRawDto customer) {
         final Optional<CustomerEntity> customerEntity = customerRepository.findById(customer.getId());
         if (customerEntity.isPresent()){
             final CustomerEntity oldCustomer = customerEntity.get();
@@ -84,7 +84,9 @@ public class CustomerService implements ICustomerService {
                     .identifyNum(customer.getIdentifyNum())
                     .build();
 
-            return customerRepository.save(newCustomer);
+            final  CustomerEntity savedCustomer = customerRepository.save(newCustomer);
+
+            return CustomerRawDto.fromEntity(savedCustomer);
         }else{
             throw new RuntimeException("Can not found any customer corresponding");
         }

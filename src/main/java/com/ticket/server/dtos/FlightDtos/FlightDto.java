@@ -1,12 +1,17 @@
 package com.ticket.server.dtos.FlightDtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ticket.server.dtos.AirportDtos.StopResponse;
 import com.ticket.server.entities.Airline;
 import com.ticket.server.entities.Airport;
 import com.ticket.server.entities.Flight;
+import com.ticket.server.entities.StopAirport;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
+
+@Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FlightDto {
     private Long id;
@@ -16,61 +21,16 @@ public class FlightDto {
     private Date departureTime;
     private Date arrivalTime;
 
-    public Long getId() {
-        return id;
-    }
+    private List<StopResponse> stopAirports;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Airport getDepartureAirport() {
-        return departureAirport;
-    }
-
-    public void setDepartureAirport(Airport departureAirport) {
-        this.departureAirport = departureAirport;
-    }
-
-    public Airport getArrivalAirport() {
-        return arrivalAirport;
-    }
-
-    public void setArrivalAirport(Airport arrivalAirport) {
-        this.arrivalAirport = arrivalAirport;
-    }
-
-    public Airline getAirline() {
-        return airline;
-    }
-
-    public void setAirline(Airline airline) {
-        this.airline = airline;
-    }
-
-    public Date getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(Date departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public Date getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(Date arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public FlightDto(Long id, Airport departureAirport, Airport arrivalAirport, Airline airline, Date departureTime, Date arrivalTime) {
+    public FlightDto(Long id, Airport departureAirport, Airport arrivalAirport, Airline airline, Date departureTime, Date arrivalTime,List<StopResponse> stopAirports ) {
         this.id = id;
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.airline = airline;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.stopAirports = stopAirports;
     }
 
     public  FlightDto(Flight flight){
@@ -80,6 +40,15 @@ public class FlightDto {
         departureTime = flight.getDepartureTime();
         arrivalTime = flight.getArrivalTime();
         airline = flight.getAirline();
+    }
+    public  FlightDto(Flight flight, List<StopResponse> stops){
+        id = flight.getId();
+        departureAirport = flight.getDepartureAirport();
+        arrivalAirport = flight.getArrivalAirport();
+        departureTime = flight.getDepartureTime();
+        arrivalTime = flight.getArrivalTime();
+        airline = flight.getAirline();
+        stopAirports = stops;
     }
 
     @Override

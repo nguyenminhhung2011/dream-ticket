@@ -32,7 +32,8 @@ public class AirportController {
                 addAirportDto.getImageUrl(),
                 addAirportDto.getDescription(),
                 addAirportDto.getOpenTime(),
-                addAirportDto.getCloseTime()
+                addAirportDto.getCloseTime(),
+                addAirportDto.getCode()
         );
         return new AirportDto(airportService.addAirport(airport));
     }
@@ -47,7 +48,8 @@ public class AirportController {
                 editAirportDto.getImageUrl(),
                 editAirportDto.getDescription(),
                 editAirportDto.getOpenTime(),
-                editAirportDto.getCloseTime()
+                editAirportDto.getCloseTime(),
+                editAirportDto.getCode()
         );
 
         return airportService.updateAirport(airport, id)
