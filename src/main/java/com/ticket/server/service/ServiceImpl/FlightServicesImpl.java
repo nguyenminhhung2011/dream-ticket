@@ -82,6 +82,7 @@ public class FlightServicesImpl implements IFlightService {
                                 stopAirport.getAirport()
                         ))
                         .build();
+                stopAirports.add(s);
 
             });
             var saveAll =  stopAirportRepository.saveAll(stopAirports);
