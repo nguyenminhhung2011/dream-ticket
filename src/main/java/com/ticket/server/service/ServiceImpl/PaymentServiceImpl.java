@@ -62,6 +62,14 @@ public class PaymentServiceImpl implements IPaymentService {
         return paymentRepository.count();
     }
 
+    @Override
+    public List<PaymentDto> getPaymentByDateRange(long from, long to){
+        return paymentRepository
+                .getPaymentByDateRange(new Date(from),new Date(to))
+                .stream()
+                .map(PaymentDto::fromEntity)
+                .toList();
+    }
 
 
     @Override
