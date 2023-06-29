@@ -13,5 +13,9 @@ public interface IAuthenticationService {
     ResponseEntity<?> confirmEmail(String confirmationToken);
 
     ResponseEntity<?> refreshToken(String refreshToken);
+
+    ResponseEntity<?> changePassword(String username,String newPassword);
+
+
 }
 

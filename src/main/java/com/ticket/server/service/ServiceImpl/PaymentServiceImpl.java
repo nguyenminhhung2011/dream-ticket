@@ -211,9 +211,10 @@ public class PaymentServiceImpl implements IPaymentService {
                 paymentRepository.count(),
                 paymentFilter.getCreateDate(),
                 paymentFilter.getPaymentStatus().toString(),
-                paymentFilter.getPaymentType().toString()
-        ).stream().map(PaymentDto::fromEntity)
-                .toList();
+                paymentFilter.getPaymentType().toString())
+                .stream()
+                .map(PaymentDto::fromEntity)
+                    .toList();
     }
 
     @Override

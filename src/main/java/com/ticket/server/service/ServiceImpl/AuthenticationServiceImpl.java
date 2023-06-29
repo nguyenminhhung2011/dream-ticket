@@ -10,6 +10,8 @@ import com.ticket.server.service.EmailService;
 import com.ticket.server.service.IService.IAuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +39,11 @@ public class    AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public ResponseEntity<?> register(RegisterRequest request) {
+
+        if (_userRepository.existsByUsername(request.getUsername())){
+            return ResponseEntity.badRequest().body("A user with that username already exists !!! Try another one");
+        }
+
         User user = User.builder()
                 .email(request.getEmail())
                 .name(request.getName())
@@ -44,6 +51,9 @@ public class    AuthenticationServiceImpl implements IAuthenticationService {
                 .gender(request.getGender())
                 .identityCard(request.getIdentityCard())
                 .role(request.getRole())
+                .birthday(request.getBirthday())
+                .enabled(true)
+                .phone(request.getPhone())
                 .username(request.getUsername())
                 .password(_passwordEncoder.encode(request.getPassword())).build();
 
@@ -94,7 +104,7 @@ public class    AuthenticationServiceImpl implements IAuthenticationService {
                     .build();
         }
 
-        return AuthenticationResponse.builder().message("Can not found user in the database").isSuccess(false).build();
+        return AuthenticationResponse.builder().message("Username or Password is incorrect ").isSuccess(false).build();
     }
 
     @Override
@@ -154,6 +164,20 @@ public class    AuthenticationServiceImpl implements IAuthenticationService {
                     .message("Can not found valid user ")
                     .isSuccess(true)
                     .build());
+    }
+
+    @Override
+    public ResponseEntity<?> changePassword(String username,String newPassword) {
+        final Optional<User> user = _userRepository.findByUsername(username);
+
+        if (user.isPresent()){
+            final User oldUser = user.get();
+            oldUser.setPassword(newPassword);
+            _userRepository.save(oldUser);
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.badRequest().body("Can not find any user have username match with yours");
+
     }
 
 }
