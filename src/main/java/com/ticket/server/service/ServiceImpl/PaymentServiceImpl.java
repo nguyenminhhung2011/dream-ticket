@@ -1,5 +1,6 @@
 package com.ticket.server.service.ServiceImpl;
 
+import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.dtos.Payment.PaymentManagementPage.*;
 import com.ticket.server.dtos.TicketDtos.TicketDto;
@@ -13,6 +14,7 @@ import com.ticket.server.repository.CreditCardRepository;
 import com.ticket.server.repository.CustomerRepository;
 import com.ticket.server.repository.FlightRepository;
 import com.ticket.server.repository.PaymentRepository;
+import com.ticket.server.service.IService.IFlightService;
 import com.ticket.server.service.IService.IPaymentService;
 import com.ticket.server.service.IService.ITicketService;
 import lombok.AllArgsConstructor;
@@ -36,7 +38,6 @@ public class PaymentServiceImpl implements IPaymentService {
     private final CustomerRepository customerRepository;
     private final CreditCardRepository creditCardRepository;
     private final ITicketService ticketService;
-
     @Override
     public List<PaymentDto> fetchPaymentData() {;
         return paymentRepository

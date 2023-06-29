@@ -4,11 +4,13 @@ import com.ticket.server.dtos.FlightDtos.AddFlightDto;
 import com.ticket.server.dtos.FlightDtos.EditFlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightNotStopResponse;
+import com.ticket.server.dtos.Payment.PaymentFlightTics;
 import com.ticket.server.dtos.SimpleResponse;
 import com.ticket.server.entities.Flight;
 import com.ticket.server.service.IService.IFlightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -75,6 +77,12 @@ public class FlightController {
         return flightService.getFlightByAirportId(id);
     }
 
+    @GetMapping("/payment={id}")
+    public PaymentFlightTics getFlightTicsFromPayment(
+            @PathVariable("id") long id
+    ){
+        return ResponseEntity.ok(flightService.getFlightTicsFromPayment(id)).getBody();
+    }
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

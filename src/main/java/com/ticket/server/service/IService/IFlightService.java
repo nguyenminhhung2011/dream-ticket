@@ -4,6 +4,7 @@ import com.ticket.server.dtos.FlightDtos.AddFlightDto;
 import com.ticket.server.dtos.FlightDtos.EditFlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightNotStopResponse;
+import com.ticket.server.dtos.Payment.PaymentFlightTics;
 import com.ticket.server.entities.Flight;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,8 @@ public interface IFlightService {
      List<FlightDto> getFlightsSortedBy(String sortBy, boolean ascending) ;
      List<FlightNotStopResponse> getFlightByPage(int cursor, int pageSize) ;
      Integer getPages(int pageSize);
+
+     PaymentFlightTics getFlightTicsFromPayment(long id);
 
      List<FlightNotStopResponse> filterFlight(String locationDeparture,
                                       String locationArrival,
