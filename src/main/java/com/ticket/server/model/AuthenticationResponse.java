@@ -1,4 +1,5 @@
 package com.ticket.server.model;
+import com.ticket.server.enums.AppUserRole;
 import lombok.*;
 
 import java.util.Date;
@@ -13,4 +14,5 @@ public class AuthenticationResponse {
      private final Long expiredTime;
      private Boolean isSuccess;
      private String message;
+     private AppUserRole role;
 }

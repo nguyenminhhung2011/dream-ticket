@@ -21,7 +21,7 @@ public class CustomerRawDto {
     private String phone;
     private String email;
     private Gender gender;
-    private CreditCardDto creditCardDto;
+    private CreditCardDto creditCard;
 
     public static CustomerRawDto fromEntity(CustomerEntity entity){
         return CustomerRawDto
@@ -33,7 +33,7 @@ public class CustomerRawDto {
                 .phone(entity.getPhone())
                 .email(entity.getEmail())
                 .gender(entity.getGender())
-                .creditCardDto(CreditCardDto.fromEntity(entity.getCreditCards()))
+                .creditCard(CreditCardDto.fromEntity(entity.getCreditCards()))
                 .build();
     }
 }

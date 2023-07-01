@@ -5,6 +5,8 @@ import com.ticket.server.dtos.FlightDtos.AddFlightDto;
 import com.ticket.server.dtos.FlightDtos.EditFlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightNotStopResponse;
+import com.ticket.server.dtos.Payment.PaymentFlightTics;
+import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.entities.*;
 import com.ticket.server.exceptions.NotFoundException;
 import com.ticket.server.repository.*;
@@ -82,6 +84,7 @@ public class FlightServicesImpl implements IFlightService {
                                 stopAirport.getAirport()
                         ))
                         .build();
+                stopAirports.add(s);
 
             });
             var saveAll =  stopAirportRepository.saveAll(stopAirports);
@@ -114,6 +117,17 @@ public class FlightServicesImpl implements IFlightService {
             final List<Flight> flights = flightRepository.findAll();
             return generateToFlightNotStops(flights);
         } catch (Exception e){
+            throw new RuntimeException();
+        }
+
+    }
+
+    @Override
+    public List<FlightNotStopResponse> getFlightByDate(int day, int month, int year) {
+        try {
+            final List<Flight> flights = flightRepository.getFlightByDate(day, month, year);
+            return generateToFlightNotStops(flights);
+        }catch (Exception e){
             throw new RuntimeException();
         }
     }
@@ -217,6 +231,27 @@ public class FlightServicesImpl implements IFlightService {
     public Integer getPages(int pageSize) {
         long flightCount = flightRepository.count();
         return (Integer) (int) Math.ceil((double) flightCount/ pageSize);    }
+
+    @Override
+    public PaymentFlightTics getFlightTicsFromPayment(long id) {
+        try {
+            final PaymentEntity paymentEntity = paymentService.getPaymentById(id);
+            final FlightDto flightDto = getFlight(paymentEntity.getFlight().getId());
+            return PaymentFlightTics
+                    .builder()
+                    .id(paymentEntity.getId())
+                    .createdDate(paymentEntity.getCreatedDate().getTime())
+                    .total(paymentEntity.getTotal())
+                    .paymentStatus(paymentEntity.getStatus())
+                    .paymentType(paymentEntity.getPaymentType())
+                    .flight(flightDto)
+                    .ticket(paymentEntity.getTicket().stream().map(TicketDto::fromEntity).toList())
+                    .build();
+        } catch (Exception e){
+            throw  new RuntimeException();
+        }
+    }
+
 
     @Override
     public List<FlightNotStopResponse> filterFlight(String locationArrival,

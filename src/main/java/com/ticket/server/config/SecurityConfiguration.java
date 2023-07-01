@@ -23,6 +23,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -38,6 +44,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         try {
             return http
+                    .cors()
+                    .and()
                     .csrf()
                     .disable()
                     .authorizeHttpRequests()
@@ -65,7 +73,7 @@ public class SecurityConfiguration {
                                                         .build());
 
                         response.setStatus(HttpStatus.OK.value());
-                        response.setContentType("application/json");
+                        response.setContentType("application/json"  );
                         response.setCharacterEncoding("UTF-8");
 
                         response.getWriter().print(authenticationJson);
@@ -79,5 +87,16 @@ public class SecurityConfiguration {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("corsConfigurationSource");
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

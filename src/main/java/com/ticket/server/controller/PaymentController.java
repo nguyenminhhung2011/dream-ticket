@@ -1,9 +1,6 @@
 package com.ticket.server.controller;
 
-import com.ticket.server.dtos.Payment.AddPaymentDto;
-import com.ticket.server.dtos.Payment.PaymentDto;
-import com.ticket.server.dtos.Payment.PaymentDtoDetail;
-import com.ticket.server.dtos.Payment.PaymentFilter;
+import com.ticket.server.dtos.Payment.*;
 import com.ticket.server.entities.PaymentEntity;
 import com.ticket.server.service.IService.IPaymentService;
 import lombok.AllArgsConstructor;
@@ -48,6 +45,11 @@ public class PaymentController{
     @GetMapping("/getByCustomer")
     public ResponseEntity<?> getPaymentByCustomerId(@RequestParam long id){
         return ResponseEntity.ok(paymentService.getPaymentByCustomerId(id));
+    }
+
+    @GetMapping("/id={id}")
+    public ResponseEntity<?> getNormalPaymentById(@PathVariable("id") long id){
+        return ResponseEntity.ok(PaymentDto.fromEntity(paymentService.getPaymentById(id)));
     }
 
     @GetMapping("/getLatest")

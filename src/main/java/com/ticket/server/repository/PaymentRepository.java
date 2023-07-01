@@ -1,6 +1,10 @@
 package com.ticket.server.repository;
 
+import com.ticket.server.dtos.OverViewDto.OverviewProjection;
 import com.ticket.server.entities.PaymentEntity;
+import com.ticket.server.entities.TotalByDateRange;
+import com.ticket.server.enums.PaymentStatus;
+import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -33,6 +37,45 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             ,nativeQuery = true
     )
     List<PaymentEntity> searchPayment(String keyword);
+
+    @Query(
+            value = """
+                select pa.* from payment_entity pa
+                where datediff(pa.created_date,:from) >= 0 
+                and datediff(pa.created_date,:to) <= 0;
+            """
+            ,nativeQuery = true
+    )
+    List<PaymentEntity> getPaymentByDateRange(Date from, Date to);
+
+
+    @Query(
+            value = """
+                select pa.created_date as date ,count(distinct pa.customer_id) as total
+                from payment_entity pa
+                where datediff(pa.created_date,:from) >= 0 
+                and datediff(pa.created_date,:to) <= 0
+                group by pa.created_date;
+            """
+            ,nativeQuery = true
+            ,name = "TotalByDateRange"
+    )
+    List<Tuple> countPaymentCustomerByDateRange(Date from, Date to);
+
+
+    @Query(
+            value = """
+                select pa.created_date as date ,count(*) as total
+                from payment_entity pa
+                where datediff(pa.created_date,:from) >= 0 
+                and datediff(pa.created_date,:to) <= 0
+                and pa.status = :status
+                group by pa.created_date;
+            """
+            ,nativeQuery = true
+            ,name = "TotalByDateRange"
+    )
+    List<Tuple> countPaymentStatusByDateRange(String status, Date from, Date to);
 
     @Query(value = """
             SELECT p.*

@@ -58,4 +58,12 @@ public class AuthenticationController {
     }
 
 
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changePassword(
+        @RequestParam String username,
+        @RequestParam String newPassword
+    ){
+        return _authAuthenticationService.changePassword(username,newPassword);
+    }
+
 }
