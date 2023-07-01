@@ -5,6 +5,7 @@ import com.ticket.server.dtos.FlightDtos.EditFlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightDto;
 import com.ticket.server.dtos.FlightDtos.FlightNotStopResponse;
 import com.ticket.server.dtos.Payment.PaymentFlightTics;
+import com.ticket.server.dtos.TicketDtos.TicketDto;
 import com.ticket.server.entities.Flight;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,8 @@ public interface IFlightService {
      FlightDto getFlight(Long id);
 
      List<FlightNotStopResponse> getAllFlight();
+     List<FlightNotStopResponse> getFlightByDate(int day, int month , int year);
+
 
      void deleteFlight(Long id);
 

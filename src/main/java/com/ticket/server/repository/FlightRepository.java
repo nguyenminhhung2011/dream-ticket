@@ -54,6 +54,12 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
             ORDER BY f.departure_airport_id
             """, nativeQuery = true)
     List<Flight> getFlightDepartureId(Integer id);
+   @Query(value = """
+           SELECT f.*
+           FROM flight AS f
+           WHERE MONTH(f.departure_time) = :month AND YEAR(f.departure_time) = :year AND DAY(f.departure_time) = :day
+            """, nativeQuery = true)
+    List<Flight> getFlightByDate(int day, int month , int year);
 
     @Query(value = """
             select count(*) from flight f

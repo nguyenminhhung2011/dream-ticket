@@ -119,6 +119,17 @@ public class FlightServicesImpl implements IFlightService {
         } catch (Exception e){
             throw new RuntimeException();
         }
+
+    }
+
+    @Override
+    public List<FlightNotStopResponse> getFlightByDate(int day, int month, int year) {
+        try {
+            final List<Flight> flights = flightRepository.getFlightByDate(day, month, year);
+            return generateToFlightNotStops(flights);
+        }catch (Exception e){
+            throw new RuntimeException();
+        }
     }
 
     @Override
