@@ -57,7 +57,6 @@ public class PaymentServiceImpl implements IPaymentService {
 
         throw new NotFoundException("Can not found any valid payment");
     }
-
     public Long getTotalPayment(){
         return paymentRepository.count();
     }

@@ -38,6 +38,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         try {
             return http
+                    .cors()
+                    .and()
                     .csrf()
                     .disable()
                     .authorizeHttpRequests()
@@ -65,7 +67,7 @@ public class SecurityConfiguration {
                                                         .build());
 
                         response.setStatus(HttpStatus.OK.value());
-                        response.setContentType("application/json");
+                        response.setContentType("application/json"  );
                         response.setCharacterEncoding("UTF-8");
 
                         response.getWriter().print(authenticationJson);

@@ -101,6 +101,7 @@ public class    AuthenticationServiceImpl implements IAuthenticationService {
                     .refreshToken(refreshToken.getToken())
                     .accessToken(jwtToken.getToken())
                     .expiredTime(jwtToken.getExpiredTime().getTime())
+                    .role(_user.getRole())
                     .build();
         }
 

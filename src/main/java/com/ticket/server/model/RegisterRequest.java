@@ -21,7 +21,7 @@ public class RegisterRequest {
     private final String email;
     private final String address;
     private final String gender;
-    private final int birthday;
+    private final long birthday;
 
     @Enumerated(EnumType.STRING)
     private final AppUserRole role;
