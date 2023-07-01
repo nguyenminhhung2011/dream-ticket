@@ -1,7 +1,10 @@
 package com.ticket.server.repository;
 
+import com.ticket.server.dtos.OverViewDto.OverviewProjection;
 import com.ticket.server.entities.Airport;
 import com.ticket.server.entities.Flight;
+import com.ticket.server.entities.TotalByDateRange;
+import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -67,5 +70,17 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
             """, nativeQuery = true
     )
     long countFlightByDate(Date date);
+
+    @Query(
+            value = """
+                select fl.departure_time as date ,count(distinct fl.id) as total
+                from flight fl
+                where datediff(fl.departure_time,:from) >= 0 
+                and datediff(fl.departure_time,:to) <= 0
+                group by fl.departure_time;
+            """
+            ,nativeQuery = true
+    )
+    List<Tuple> countFlightByDateRange(Date from, Date to);
 }
 
