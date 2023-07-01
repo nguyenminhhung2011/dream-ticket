@@ -123,6 +123,8 @@ public class TicketServiceImpl implements ITicketService {
         return ticketRepository.findAll().stream().map(TicketDto::fromEntity).toList();
     }
 
+
+
     @Override
     public List<TicketDto> getByFlight(Long flightId) {
         return ticketRepository.findAllByFlight(flightId).stream().map(TicketDto::fromEntity).toList();

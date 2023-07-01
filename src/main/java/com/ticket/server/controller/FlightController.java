@@ -58,6 +58,15 @@ public class FlightController {
         );
     }
 
+    @GetMapping("/month={month}&year={year}&day={day}")
+    public @ResponseBody List<FlightNotStopResponse> getFlightByDate(
+            @PathVariable("month") int month ,
+            @PathVariable("year") int year,
+            @PathVariable("day") int day
+    ){
+        return flightService.getFlightByDate(day, month, year);
+    }
+
     @GetMapping("/departureId={id}")
     public  @ResponseBody List<FlightNotStopResponse> getFlightByDepartureId(
             @PathVariable("id")Integer id
